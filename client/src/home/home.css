@@ -1,0 +1,240 @@
+/* home.css */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+
+body {
+  font-family: "Rubik", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: white;
+  color: #333;
+  line-height: 1.6;
+
+
+}
+
+.container-home {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  
+}
+
+
+header {
+  background-color: #333;
+  color: white;
+  padding: 10px 0;
+  text-align: center;
+}
+
+.intro-section {
+  padding: 200px 0;
+
+}
+
+
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+  
+
+
+}
+
+.main-title {
+  color: #f00;
+  text-align: 5px left;
+  font-size: 4.2rem;
+  line-height: 1.05;
+  margin-bottom: 2rem;
+  font-weight: bold;
+  margin: 20px;
+  font-variant: small-caps;
+  
+
+
+
+}
+
+.description {
+  color: black ;
+  font-size: 20px;
+  margin-bottom: 30px;
+  text-align: left;
+  font-weight: bold;
+  font-variant: small-caps;
+  margin: 10px;
+  
+}
+
+
+.buttons {
+  display: flex;
+  justify-content: left;
+}
+
+.login-button,
+.register-button {
+  background-color: tomato;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  padding: 10px 20px;
+  text-decoration: none;
+  margin-right: 20px;
+  transition: all 0.3s ease;
+  border-radius: 10px;
+  font-variant: small-caps;
+  margin: 29px;
+
+
+}
+
+.register-button {
+  background-color: tomato;
+}
+
+.login-button:hover,
+.register-button:hover {
+  opacity: 0.8;
+}
+
+.login-button:active,
+.register-button:active {
+  background-color: tomato;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.login-button:focus,
+.register-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #f00, 0 0 0 4px #fff;
+}
+
+.crm {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+  
+}
+
+.home-logo {
+  position: absolute;
+  top: -280px;
+  width: 50rem;
+  height: 25rem;
+  margin: 5px;
+  padding: 20px;
+
+}
+.middle {
+  transition: .5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%)
+}
+
+.crm:hover .home-logo {
+  opacity: 0.3;
+}
+
+.crm:hover .middle {
+  opacity: 1;
+}
+
+/*about-us*/
+
+#about-us {
+  padding: 50px;
+  background-color: papayawhip;
+}
+
+.title {
+  font-size: 2.5em;
+  color: red;
+  margin-bottom: 30px;
+  font-variant: small-caps;
+
+}
+
+.description-1 {
+  font-size: 1.2em;
+  color: #666;
+  line-height: 1.6;
+  font-variant: small-caps;
+
+}
+
+.description-1 ul {
+  list-style-type: none;
+  margin-left: 20px;
+  font-variant: small-caps;
+
+}
+
+.link {
+  color: red;
+  text-decoration: none;
+  font-size: 1.2em;
+  margin-top: 30px;
+  font-variant: small-caps;
+
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+/*why*/
+.why-us-section {
+  background-color: #f7f7f7; /* Light grey background for contrast */
+  padding: 2rem; /* Add padding for spacing */
+  border-radius: 10px; /* Rounded corners */
+  margin: 2rem 0; /* Margin to separate from other sections */
+}
+
+.why-us-section .title {
+  font-size: 2rem; /* Larger font size for the title */
+  color: #333; /* Dark grey color for the title */
+  margin-bottom: 1rem; /* Space below the title */
+  text-align: center; /* Center align the title */
+}
+
+.why-us-section .reasons-list {
+  list-style-type: none; /* Remove default list styling */
+  padding-left: 0; /* Remove default padding */
+}
+
+.why-us-section .reason {
+  font-size: 1.2rem; /* Slightly larger font for reasons */
+  color: #555; /* Medium grey color for reasons */
+  margin: 0.5rem 0; /* Space between list items */
+  padding-left: 2rem; /* Padding to align with icon */
+  position: relative; /* Positioning for custom icons */
+}
+
+.why-us-section .reason i {
+  color: #eb4d4b; /* Red color for the icons */
+  font-size: 1.5rem; /* Larger icon size */
+  position: absolute; /* Absolute positioning */
+  left: 0; /* Align to the left */
+  top: 0; /* Align to the top */
+}
+
+.why-us-section p {
+  font-size: 1rem; /* Standard font size for the paragraph */
+  color: #555; /* Medium grey color for the paragraph */
+  margin-top: 1rem; /* Space above the paragraph */
+  text-align: center; /* Center align the paragraph */
+}
+

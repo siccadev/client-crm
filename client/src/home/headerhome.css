@@ -1,0 +1,85 @@
+/* headerhome.css */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Container principal du header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  margin-bottom: -100px;
+  background-color: white;
+  border-bottom: 1px solid red;
+}
+
+/* Conteneur du logo */
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+/* Lien du logo */
+.logo-link {
+  text-decoration: none;
+}
+
+/* Image du logo */
+.header-logo {
+  height: 70px;
+  width: auto;
+  margin-right: 20px;
+  margin: 5px;
+}
+
+/* Nom du système */
+.logo-container p {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: red;
+  font-variant: small-caps;
+
+}
+
+/* Conteneur des liens de navigation */
+.nav-links {
+  display: flex;
+  align-items: center;
+}
+
+/* Style général pour les liens de navigation */
+.nav-links a {
+  text-decoration: none;
+  color: #343a40;
+  margin-left: 20px;
+  display: flex;
+  align-items: center;
+  font-variant: small-caps;
+
+}
+
+/* Icônes des liens de navigation */
+.header-icon {
+  margin-right: 5px;
+  font-size: 1.2rem;
+}
+
+/* Style pour le lien actif */
+.nav-links .active {
+  color: black;
+  font-weight: bold;
+}
+
+/* Style pour la section 'About us' */
+.about-us,
+.contact-us {
+  display: flex;
+  align-items: center;
+}
+
+/* Hover effect for links */
+.nav-links a:hover {
+  color: red;
+}

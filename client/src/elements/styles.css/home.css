@@ -1,0 +1,45 @@
+.container-home {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  h1 {
+    font-size: 3em;
+    color: #333;
+    margin-top:70px;
+    left:auto
+  }
+  
+  .content {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+  
+  p {
+    font-size: 1.2em;
+    color: #333;
+  }
+  
+  .buttons {
+    margin-top: 20px;
+    align-items: center;
+  }
+  
+  .buttons a {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px;
+    color: #fff;
+    background-color: #ff0000; /* Red background color */
+    border-radius: 5px;
+    text-decoration: none;
+  }
+  
+  .buttons a:hover {
+    background-color: #cc0000; /* Darker red on hover */
+  }
+  
+  
