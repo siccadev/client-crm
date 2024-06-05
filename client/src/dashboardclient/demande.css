@@ -1,0 +1,122 @@
+/* Import Google Font - Roboto */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* Global Styles */
+body {
+  font-family: 'Roboto', sans-serif;
+  color: #333;
+  line-height: 1.5;
+}
+
+/* Container */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  max-width: 1200px;
+  padding: 20 130px;
+}
+
+/* Buttons */
+button {
+  background-color: #ff0000; /* Red */
+  color: #ffffff; /* White */
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #cc0000; /* Darker Red */
+}
+
+button:disabled {
+  background-color: #666666; /* Gray */
+  color: #ffffff; /* White */
+  cursor: not-allowed;
+}
+
+button:disabled:hover {
+  background-color: #666666; /* Gray */
+}
+
+/* Form */
+form {
+  margin: 0 auto;
+  max-width: 900%; /* Increase max-width to 800px or any other value you prefer */
+  padding: 10px;
+  background-color: #ffffff; /* White */
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Inputs */
+input,
+select {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #dddddd;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+/* Labels */
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.container {
+  margin-top: 50px;
+}
+
+.item {
+  color: red;
+  margin-bottom: 10px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+input[type="text"],
+input[type="date"],
+select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+
+select {
+  width: 100%;
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus,
+select:focus {
+  outline: none;
+  border-color: red;
+}
+
+input[type="text"]::placeholder,
+input[type="date"]::placeholder {
+  color: #ccc;
+}
+
+input[type="text"]:disabled,
+input[type="date"]:disabled,
+select:disabled {
+  background-color: #f4f4f4;
+  cursor: not-allowed;
+}

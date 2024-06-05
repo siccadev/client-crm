@@ -1,0 +1,66 @@
+/* Import Google Font - Roboto */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* Global Styles */
+body {
+  font-family: 'Roboto', sans-serif;
+  color: #000; /* changed color to black */
+  line-height: 1.6;
+  margin: 20px; /* added margin reset and changed to pixels */
+  padding: 80px;
+  /* added padding reset and changed to pixels */
+  background-color: #fff; /* added background color */
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  width: 100%;
+  max-width: 900px; /* added max-width for responsiveness */
+  padding: 30px;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.item {
+  color: red;
+  text-align: center;
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  margin: 20px 0;
+  color: black;
+  font-weight: bold;
+  border-radius: 20px; /* added border-radius */
+}
+
+.input-field,
+.select-field {
+  padding: 10px;
+  margin: 5px 0;
+  border: 2px solid #ccc; /* increased border width */
+  border-radius: 10px; /* added border-radius */
+}
+
+.input-field:focus,
+.select-field:focus {
+  outline: none;
+  border-color: red;
+}
+
+.select-field {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position-x: 90%;
+  background-position-y: center;
+  background-size: 15px 15px;
+  background-color: white;
+}
