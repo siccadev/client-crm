@@ -22,7 +22,7 @@ app.use(cors());
 const connection = mysql.createConnection({
   host: '127.0.0.1',  // Corrected IP address
   user: 'root',
-  password: 'root',
+  password: '',
   database: 'pfecrm',
   port: 4306 
 });
