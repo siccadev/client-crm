@@ -22,9 +22,9 @@ app.use(cors());
 const connection = mysql.createConnection({
   host: '127.0.0.1',  // Corrected IP address
   user: 'root',
-  password: 'root',
+  password: '',
   database: 'pfecrm',
-  port: 4306 
+  port: 4306
 });
 
 // Connect to the database
@@ -81,8 +81,8 @@ app.post('/login', (req, res) => {
 
     const userRole = results[0].role;
 
-    
-     if (userRole === 'admin') {
+
+    if (userRole === 'admin') {
       // Check admin's special credentials
       if (username === 'adminsmartsystem' && password === 'adminadmin') {
         res.json({ success: true, role: userRole });
@@ -130,6 +130,18 @@ app.post('/register', (req, res) => {
     res.status(200).json({ message: 'Inscription réussie.', redirect: '/login' });
   });
 });
+app.get('/demandesfin', (req, res) => {
+  const query = 'SELECT * FROM demandes_fin';
+  connection.query(query, (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: 'Error submitting form data' });
+    }
+
+    res.status(200).json({ message: 'Form data submitted successfully', data: results });
+  });
+});
+
 app.post('/demandesfin', (req, res) => {
   const demandeFin = req.body;
   const query = 'INSERT INTO demandes_fin SET ?';

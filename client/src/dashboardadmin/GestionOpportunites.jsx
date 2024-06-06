@@ -4,30 +4,21 @@ import { CSVLink } from 'react-csv';
 function GestionOpportunites() {
   const [data, setData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
-  
 
   useEffect(() => {
     fetch('http://localhost:3001/demandesfin')
       .then(res => {
-        // Log the response status and headers for debugging
         console.log('Response Status:', res.status);
         console.log('Response Headers:', res.headers);
-  
-        if (!res.ok) {
-          throw new Error(`Server error: ${res.status}`);
-        }
-        
         return res.json();
       })
       .then(data => {
         setData(data);
       })
       .catch(err => {
-        // Log the error for debugging
         console.error('Fetch error:', err);
       });
   }, []);
-  
 
   const deleteRow = (id) => {
     fetch(`http://localhost:3001/demandesfin/${id}`, { method: 'DELETE' })
@@ -95,8 +86,8 @@ function GestionOpportunites() {
           </tr>
         </thead>
         <tbody>
-          {data.map((item) => (
-            <tr key={item.IDDemandes_Fin}>
+          {data.map((item, index) => (
+            <tr key={index}>
               <td>{item.IDDemandes_Fin}</td>
               <td>{item.DF_Date}</td>
               <td>{item.Cl_Type}</td>
@@ -104,9 +95,9 @@ function GestionOpportunites() {
               <td>{item.Cl_Prenom}</td>
               <td>{item.Cl_Sigle}</td>
               <td>{item.KFJUR}</td>
-              <td>{item.KRGM}</td>
+              <td>{item.KRGM.data.join(', ')}</td>
               <td>{item.Cl_Capital}</td>
-              <td>{item.KNATS_S}</td>
+              <td>{item.KNATS_S.data.join(', ')}</td>
               <td>{item.DF_Type_Projet}</td>
               <td>{item.DF_Montant_HT}</td>
               <td>{item.DF_TVA}</td>
@@ -136,9 +127,9 @@ function GestionOpportunites() {
           <p>Prénom: {selectedRow.Cl_Prenom}</p>
           <p>Sigle: {selectedRow.Cl_Sigle}</p>
           <p>KFJUR: {selectedRow.KFJUR}</p>
-          <p>KRGM: {selectedRow.KRGM}</p>
+          <p>KRGM: {selectedRow.KRGM.data.join(', ')}</p>
           <p>Capital: {selectedRow.Cl_Capital}</p>
-          <p>KNATS_S: {selectedRow.KNATS_S}</p>
+          <p>KNATS_S: {selectedRow.KNATS_S.data.join(', ')}</p>
           <p>Type Projet: {selectedRow.DF_Type_Projet}</p>
           <p>Montant HT: {selectedRow.DF_Montant_HT}</p>
           <p>TVA: {selectedRow.DF_TVA}</p>
