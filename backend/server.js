@@ -22,7 +22,7 @@ app.use(cors());
 const connection = mysql.createConnection({
   host: '127.0.0.1',  // Corrected IP address
   user: 'root',
-  password: 'root',
+  password: '',
   database: 'pfecrm',
   port: 4306 
 });
@@ -130,6 +130,18 @@ app.post('/register', (req, res) => {
     res.status(200).json({ message: 'Inscription réussie.', redirect: '/login' });
   });
 });
+app.get('/demandesfin',(req,res)=>{
+  const query='SELECT * FROM demandes_fin';
+  connection.query(query, (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: 'Error submitting form data' });
+    }
+
+    res.status(200).json({ message: 'Form data submitted successfully', data: results });
+  });
+});
+
 app.post('/demandesfin', (req, res) => {
   const demandeFin = req.body;
   const query = 'INSERT INTO demandes_fin SET ?';
@@ -143,6 +155,19 @@ app.post('/demandesfin', (req, res) => {
     res.status(200).json({ message: 'Form data submitted successfully', data: results });
   });
 });
+
+app.delete('/demandesfin/:IDDemandes_Fin', (req, res) => {
+  const id = req.params.IDDemandes_Fin;
+  const sql = 'DELETE FROM demandes_fin WHERE IDDemandes_Fin = ?';
+  connection.query(sql, id, (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: 'Error deleting data' });
+    }
+    res.status(200).json({ message: 'Data deleted successfully', data: results });
+  });
+});
+
 // Route handler for initiating password reset
 app.post('/forgot-password', (req, res) => {
   const { email } = req.body;
