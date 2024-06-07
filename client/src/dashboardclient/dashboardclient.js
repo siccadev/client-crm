@@ -24,9 +24,9 @@ const DashboardClient = () => {
 
         // Calculate the counts based on the data
         const total = data.length;
-        const approved = data.filter(demand => demand.statuts === 'Approved').length;
-        const notApproved = data.filter(demand => demand.statuts === 'Declined').length;
-        const processing = data.filter(demand => demand.statuts === 'Processing').length;
+        const approved = data.filter(demand => demand.approvalStatus === 'Approved').length;
+        const notApproved = data.filter(demand => demand.approvalStatus === 'Declined').length;
+        const processing = data.filter(demand => demand.approvalStatus === 'Processing').length;
 
         // Logging to debug
         console.log('Total demands:', total);

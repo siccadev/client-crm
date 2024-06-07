@@ -49,12 +49,16 @@ function GestionOpportunites() {
   };
 
   const updateStatus = (id, status) => {
-    axios.put(`http://localhost:3001/demandesfin/${id}`, { statuts: status })
+    axios.put(`http://localhost:3001/demandesfin/${id}`, { status })
       .then(response => {
         const updatedRow = response.data;
         const newState = status === 'Approved' ? 2 : 0; // 2 for approved, 0 for not approved
-        const updatedDemand = { ...updatedRow, state: newState };
-        setData(data.map(item => (item.IDDemandes_Fin === id ? updatedDemand : item)));
+        const updatedDemand = data.find(item => item.IDDemandes_Fin === id);
+        if (updatedDemand) {
+          updatedDemand.state = newState;
+          updatedDemand.approvalStatus = status;
+          setData([...data]);
+        }
       })
       .catch(err => {
         console.log(err);
@@ -100,7 +104,7 @@ function GestionOpportunites() {
   return (
     <div>
       <h1>Gestion Opportunités</h1>
-      <h2>Welcome, {user.username}</h2>
+      {/* <h2>Welcome, {user.username}</h2> */}
       <table>
         <thead>
           <tr>
@@ -151,39 +155,45 @@ function GestionOpportunites() {
               <td>{sanitizeValue(item.DF_Durée)}</td>
               <td>{sanitizeValue(item.DF_Taux)}</td>
               <td>{sanitizeValue(item.DF_TEG)}</td>
-              <td>{sanitizeValue(item.statuts)}</td>
+              <td>{sanitizeValue(item.approvalStatus)}</td>
               <td>{sanitizeValue(item.state)}</td>
               <td>
-                <button onClick={() => viewRow(item.IDDemandes_Fin)}>Lire</button>
-                <button onClick={() => deleteRow(item.IDDemandes_Fin)}>Supprimer</button>
                 <button onClick={() => updateStatus(item.IDDemandes_Fin, 'Approved')}>Approve</button>
                 <button onClick={() => updateStatus(item.IDDemandes_Fin, 'Declined')}>Decline</button>
+                <button onClick={() => viewRow(item.IDDemandes_Fin)}>View</button>
+                <button onClick={() => deleteRow(item.IDDemandes_Fin)}>Delete</button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      {showModal && (
+
+      <CSVLink data={csvData} filename={"demandesfin.csv"}>
+        Export to CSV
+      </CSVLink>
+
+      {showModal && selectedRow && (
         <div className="modal">
           <div className="modal-content">
-            <h2>Selected Row Details</h2>
-            {Object.keys(selectedRow).map((key) => (
-              <p key={key}>{key}: {typeof selectedRow[key] === 'object' ? JSON.stringify(selectedRow[key]) : selectedRow[key]}</p>
-            ))}
-            <button onClick={() => setShowModal(false)}>Close</button>
+            <span className="close" onClick={() => setShowModal(false)}>&times;</span>
+            <h2>Demand Details</h2>
+            <p><strong>ID:</strong> {selectedRow.IDDemandes_Fin}</p>
+            <p><strong>User:</strong> {selectedRow.UserID}</p>
+            <p><strong>Date:</strong> {selectedRow.DF_Date}</p>
+            {/* Add more details as needed */}
           </div>
         </div>
       )}
+
       {showModal1 && (
         <div className="modal">
           <div className="modal-content">
-            <h2>Row Deleted!</h2>
+            <span className="close" onClick={() => setShowModal1(false)}>&times;</span>
+            <h2>Row Deleted</h2>
             <p>Row with ID {deletedRowId} has been deleted.</p>
-            <button onClick={() => setShowModal1(false)}>Close</button>
           </div>
         </div>
       )}
-      <CSVLink className='button-24' data={csvData} filename="demandes_fin.csv">Download CSV</CSVLink>
     </div>
   );
 }
