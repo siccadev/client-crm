@@ -97,6 +97,26 @@ app.post('/login', (req, res) => {
   });
 });
 
+
+app.get('/user/:username', (req, res) => {
+  const username = req.params.username;
+  const query = 'SELECT * FROM register WHERE username = ?';
+
+  connection.query(query, [username], (err, results) => {
+    if (err) {
+      res.status(500).send(err);
+    }
+
+    if (results.length > 0) {
+      res.json(results[0]);
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  });
+});
+
+
+
 app.post('/register', (req, res) => {
   const { username, email, password, role, activite, secteur } = req.body;
 
@@ -141,9 +161,8 @@ app.get('/demandesfin',(req,res)=>{
     res.status(200).json({ message: 'Form data submitted successfully', data: results });
   });
 });
-
 app.post('/demandesfin', (req, res) => {
-  const demandeFin = req.body;
+  const demandeFin = { ...req.body, state: 1, approvalStatus: 'not approved' }; // Include approvalStatus field
   const query = 'INSERT INTO demandes_fin SET ?';
 
   connection.query(query, demandeFin, (err, results) => {
@@ -151,8 +170,36 @@ app.post('/demandesfin', (req, res) => {
       console.error(err);
       return res.status(500).json({ message: 'Error submitting form data' });
     }
+    const newDemandeId = results.insertId;
+    const stateQuery = 'SELECT state FROM demandes_fin WHERE IDDemandes_Fin = ?';
 
-    res.status(200).json({ message: 'Form data submitted successfully', data: results });
+    connection.query(stateQuery, [newDemandeId], (stateErr, stateResults) => {
+      if (stateErr) {
+        console.error(stateErr);
+        return res.status(500).json({ message: 'Error fetching state' });
+      }
+
+      const state = stateResults[0].state;
+      res.status(200).json({ message: 'Form data submitted successfully', state });
+    });
+  });
+});
+
+app.put('/demandesfin/:id', (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  // Perform the update operation in the database
+  const query = 'UPDATE demandes_fin SET approvalStatus = ?, state = ? WHERE IDDemandes_Fin = ?';
+  const stateValue = status === 'Approved' ? 2 : 0; // Set state based on approval status
+  connection.query(query, [status, stateValue, id], (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: 'Error updating status in the database' });
+    }
+
+    // Send a response indicating success
+    res.status(200).json({ message: 'Status updated successfully', data: results });
   });
 });
 

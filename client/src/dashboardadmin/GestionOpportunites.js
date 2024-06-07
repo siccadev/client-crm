@@ -9,6 +9,12 @@ function GestionOpportunites() {
   const [showModal, setShowModal] = useState(false);
   const [showModal1, setShowModal1] = useState(false);
   const [deletedRowId, setDeletedRowId] = useState(null);
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    setUser(storedUser);
+  }, []);
 
   useEffect(() => {
     axios.get('http://localhost:3001/demandesfin')
@@ -46,7 +52,9 @@ function GestionOpportunites() {
     axios.put(`http://localhost:3001/demandesfin/${id}`, { statuts: status })
       .then(response => {
         const updatedRow = response.data;
-        setData(data.map(item => (item.IDDemandes_Fin === id ? updatedRow : item)));
+        const newState = status === 'Approved' ? 2 : 0; // 2 for approved, 0 for not approved
+        const updatedDemand = { ...updatedRow, state: newState };
+        setData(data.map(item => (item.IDDemandes_Fin === id ? updatedDemand : item)));
       })
       .catch(err => {
         console.log(err);
@@ -68,6 +76,7 @@ function GestionOpportunites() {
 
   const csvData = data.map(item => ({
     IDDemandes_Fin: item.IDDemandes_Fin,
+    UserID: item.UserID,
     DF_Date: item.DF_Date,
     Cl_Type: item.Cl_Type,
     Cl_Nom: item.Cl_Nom,
@@ -91,10 +100,12 @@ function GestionOpportunites() {
   return (
     <div>
       <h1>Gestion Opportunités</h1>
+      <h2>Welcome, {user.username}</h2>
       <table>
         <thead>
           <tr>
             <th>IDDemandes_Fin</th>
+            <th>User</th>
             <th>DF_Date</th>
             <th>Cl_Type</th>
             <th>Cl_Nom</th>
@@ -110,16 +121,19 @@ function GestionOpportunites() {
             <th>DF_Montant_TTC</th>
             <th>DF_Auto_FinTTC</th>
             <th>DF_Durée</th>
-            <th>DF_Taux</th>
+            <th>DF_Taux</
+            th>
             <th>DF_TEG</th>
             <th>Statuts</th>
+            <th>state</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {Array.isArray(data) && data.map((item) => (
-            <tr key={item.IDDemandes_Fin}>
+          {Array.isArray(data) && data.map((item, index) => (
+            <tr key={`${item.IDDemandes_Fin}-${index}`}>
               <td>{sanitizeValue(item.IDDemandes_Fin)}</td>
+              <td>{sanitizeValue(item.UserID)}</td>
               <td>{sanitizeValue(item.DF_Date)}</td>
               <td>{sanitizeValue(item.Cl_Type)}</td>
               <td>{sanitizeValue(item.Cl_Nom)}</td>
@@ -138,6 +152,7 @@ function GestionOpportunites() {
               <td>{sanitizeValue(item.DF_Taux)}</td>
               <td>{sanitizeValue(item.DF_TEG)}</td>
               <td>{sanitizeValue(item.statuts)}</td>
+              <td>{sanitizeValue(item.state)}</td>
               <td>
                 <button onClick={() => viewRow(item.IDDemandes_Fin)}>Lire</button>
                 <button onClick={() => deleteRow(item.IDDemandes_Fin)}>Supprimer</button>
@@ -161,17 +176,16 @@ function GestionOpportunites() {
       )}
       {showModal1 && (
         <div className="modal">
-          <div
-          className="modal-content">
-          <h2>Row Deleted!</h2>
-          <p>Row with ID {deletedRowId} has been deleted.</p>
-          <button onClick={() => setShowModal1(false)}>Close</button>
+          <div className="modal-content">
+            <h2>Row Deleted!</h2>
+            <p>Row with ID {deletedRowId} has been deleted.</p>
+            <button onClick={() => setShowModal1(false)}>Close</button>
+          </div>
         </div>
-      </div>
-    )}
-    <CSVLink className='button-24' data={csvData} filename="demandes_fin.csv">Download CSV</CSVLink>
-  </div>
-);
+      )}
+      <CSVLink className='button-24' data={csvData} filename="demandes_fin.csv">Download CSV</CSVLink>
+    </div>
+  );
 }
 
 export default GestionOpportunites;

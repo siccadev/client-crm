@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import smart from './images/smart.jpeg';
 import 'tailwindcss/tailwind.css'; // Import Tailwind CSS
 import './styles.css/login.css';
@@ -9,7 +9,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
-
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,12 +36,16 @@ const Login = () => {
       if (data.success) {
         document.cookie = `userRole=${data.role}; HttpOnly; Secure; Path=/`;
 
+        // Fetch user data
+        const userResponse = await fetch(`http://localhost:3001/user/${username}`);
+        const userData = await userResponse.json();
+
         switch (data.role) {
           case 'admin':
-            window.location.href = '/dashboardadmin';
+            navigate('/dashboardadmin', { state: { userData } });
             break;
           case 'client':
-            window.location.href = '/dashboardclient';
+            navigate('/dashboardclient', { state: { userData } });
             break;
           default:
             setError('The user role is not recognized.');
@@ -93,7 +97,7 @@ const Login = () => {
           <label htmlFor="rememberMe">Remember me</label>
         </div>
         <button type="submit" className='bg-blue-500 text-white p-2 w-full'>Login</button>
-        <Link to="/forgot-password" className='block block font-medium mb-1'>Forgot Password?</Link>
+        <Link to="/forgot-password" className='block font-medium mb-1'>Forgot Password?</Link>
         <span>
           Don't have an account? <Link to="/register" className='font-medium'>Sign up</Link>
         </span>

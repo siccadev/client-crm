@@ -120,3 +120,33 @@ select:disabled {
   background-color: #f4f4f4;
   cursor: not-allowed;
 }
+.processing-box {
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin-top: 20px;
+  text-align: center;
+  font-size: 1.2em;
+  color: #555;
+}
+.processing-box, .approved-box, .declined-box {
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin-top: 20px;
+  text-align: center;
+  font-size: 1.2em;
+  color: #555;
+}
+
+.approved-box {
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+  color: #155724;
+}
+
+.declined-box {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
+}

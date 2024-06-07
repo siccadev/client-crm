@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Page1 from './Page1';
 import Page2 from './Page2';
 import Page3 from './Page3';
@@ -10,7 +10,13 @@ import Header from './headerclient';
 import SidebarC from './sidebarclient';
 
 const DemandeFinForm = () => {
+  const location = useLocation();
+  const userData = location.state?.userData;
+  const navigate = useNavigate();
+  console.log("Received userData:", userData);
+
   const [demandeFin, setDemandeFin] = useState({
+    UserID: userData?.id,
     DF_Date: '',
     Cl_RaiSoc: '',
     Cl_Type: '',
@@ -34,7 +40,7 @@ const DemandeFinForm = () => {
     Cl_Patrimoine: '',
     Cl_Val_Patrimoine: '',
     Cl_Regime_Matrimonial: '',
-    Cl_Be_Nom_Prenom: '',
+    Cl_BE_Nom_Prenom: '',
     Cl_BE_KTIDPM: '',
     Cl_BE_NumId: '',
     Cl_BE_Adresse: '',
@@ -60,27 +66,45 @@ const DemandeFinForm = () => {
     DF_Hyp_CIN: '',
     DF_Hyp_Objet: '',
     DF_Hyp_Val: '',
-    status: '',
+    state: 1,
+    approvalStatus: 'not approved', // New field to track approval status
   });
 
   const [currentPage, setCurrentPage] = useState(1);
-  const navigate = useNavigate();
+  const [submissionState, setSubmissionState] = useState(null);
+
+  useEffect(() => {
+    const fetchApprovalStatus = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/demandesfin/approvalStatus', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Error fetching approval status');
+        }
+
+        const data = await response.json();
+        setDemandeFin({ ...demandeFin, approvalStatus: data.approvalStatus });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchApprovalStatus();
+  }, []); // Run only once on component mount
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setDemandeFin({ ...demandeFin, [name]: value });
   };
 
-  const handlePrevious = () => {
-    setCurrentPage(currentPage - 1);
-  };
-
-  const handleNext = () => {
-    setCurrentPage(currentPage + 1);
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     try {
       const response = await fetch('http://localhost:3001/demandesfin', {
         method: 'POST',
@@ -95,8 +119,11 @@ const DemandeFinForm = () => {
       }
 
       const data = await response.json();
+      setSubmissionState(data.state);
       console.log(data);
-      navigate('/dashboardclient');
+      if (data.state !== 1) {
+        navigate('/dashboardclient');
+      }
     } catch (error) {
       console.error(error);
     }
@@ -126,14 +153,13 @@ const DemandeFinForm = () => {
       <form onSubmit={handleSubmit}>
         {getCurrentPage()}
         <div className="container">
-          <button type="button" onClick={() => setCurrentPage(1)}>
-            Annuler
-          </button>
-          <button type="button" onClick={handlePrevious} disabled={currentPage === 1}>
-            Previous
-          </button>
+          {currentPage > 1 && (
+            <button type="button" onClick={() => setCurrentPage(currentPage - 1)}>
+              Précédent
+            </button>
+          )}
           {currentPage < 5 && (
-            <button type="button" onClick={handleNext}>
+            <button type="button" onClick={() => setCurrentPage(currentPage + 1)}>
               Suivant
             </button>
           )}
@@ -142,6 +168,11 @@ const DemandeFinForm = () => {
           )}
         </div>
       </form>
+      {submissionState === 1 && (
+        <div className="processing-box">
+          <p>Votre demande est en cours de traitement.</p>
+        </div>
+      )}
     </div>
   );
 };
