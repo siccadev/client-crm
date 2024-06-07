@@ -9,25 +9,21 @@ require('dotenv').config();
 
 const PORT = process.env.PORT || 3001;
 
-// Function to generate a unique token
 const generateToken = () => {
   return crypto.randomBytes(20).toString('hex');
 };
 
-// Use the body-parser middleware to parse JSON request bodies
 app.use(bodyParser.json());
 app.use(cors());
 
-// Create a connection to the database
 const connection = mysql.createConnection({
-  host: '127.0.0.1',  // Corrected IP address
+  host: '127.0.0.1',
   user: 'root',
   password: '',
   database: 'pfecrm',
   port: 4306
 });
 
-// Connect to the database
 connection.connect((err) => {
   if (err) throw err;
   console.log('Connected to the database');
@@ -36,7 +32,7 @@ connection.connect((err) => {
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
   port: 587,
-  secure: false, // Use `true` for port 465, `false` for all other ports
+  secure: false,
   auth: {
     user: 'nounouhannachi2001@gmail.com',
     pass: 'pcar gejo vxro bvqz',
@@ -83,7 +79,6 @@ app.post('/login', (req, res) => {
 
 
     if (userRole === 'admin') {
-      // Check admin's special credentials
       if (username === 'adminsmartsystem' && password === 'adminadmin') {
         res.json({ success: true, role: userRole });
       } else {
@@ -155,6 +150,19 @@ app.post('/demandesfin', (req, res) => {
     res.status(200).json({ message: 'Form data submitted successfully', data: results });
   });
 });
+
+app.delete('/demandesfin/:IDDemandes_Fin', (req, res) => {
+  const id = req.params.IDDemandes_Fin;
+  const sql = 'DELETE FROM demandes_fin WHERE IDDemandes_Fin = ?';
+  connection.query(sql, id, (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: 'Error deleting data' });
+    }
+    res.status(200).json({ message: 'Data deleted successfully', data: results });
+  });
+});
+
 // Route handler for initiating password reset
 app.post('/forgot-password', (req, res) => {
   const { email } = req.body;
@@ -198,7 +206,6 @@ app.post('/forgot-password', (req, res) => {
     res.status(500).json({ message: 'Une erreur est survenue lors de la demande de réinitialisation du mot de passe.' });
   }
 });
-
 // Route handler for verifying the token and updating the password
 app.post('/reset-password', (req, res) => {
   const { token, newPassword } = req.body;
@@ -207,7 +214,6 @@ app.post('/reset-password', (req, res) => {
   if (!token || !newPassword) {
     return res.status(400).json({ message: 'Veuillez fournir un token et un nouveau mot de passe.' });
   }
-
   try {
     // Find the user by token
     connection.query('SELECT * FROM register WHERE token = ?', [token], (err, results) => {

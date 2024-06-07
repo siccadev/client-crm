@@ -1,19 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { CSVLink } from 'react-csv';
+import axios from 'axios';
+import './GestionOpportunites.css';
 
 function GestionOpportunites() {
   const [data, setData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [showModal1, setShowModal1] = useState(false);
+  const [deletedRowId, setDeletedRowId] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:3001/demandesfin')
-      .then(res => {
-        console.log('Response Status:', res.status);
-        console.log('Response Headers:', res.headers);
-        return res.json();
-      })
-      .then(data => {
-        setData(data);
+    axios.get('http://localhost:3001/demandesfin')
+      .then(response => {
+        console.log('Response Status:', response.status);
+        console.log('Response Headers:', response.headers);
+        console.log('Fetched data:', response.data);
+
+        if (Array.isArray(response.data)) {
+          setData(response.data);
+        } else if (response.data && typeof response.data === 'object' && Array.isArray(response.data.data)) {
+          setData(response.data.data);
+        } else {
+          throw new Error('Data is not an array');
+        }
       })
       .catch(err => {
         console.error('Fetch error:', err);
@@ -21,9 +31,11 @@ function GestionOpportunites() {
   }, []);
 
   const deleteRow = (id) => {
-    fetch(`http://localhost:3001/demandesfin/${id}`, { method: 'DELETE' })
-      .then(res => {
+    axios.delete(`http://localhost:3001/demandesfin/${id}`)
+      .then(() => {
         setData(data.filter(item => item.IDDemandes_Fin !== id));
+        setDeletedRowId(id);
+        setShowModal1(true);
       })
       .catch(err => {
         console.log(err);
@@ -31,15 +43,9 @@ function GestionOpportunites() {
   };
 
   const updateStatus = (id, status) => {
-    fetch(`http://localhost:3001/demandesfin/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ statuts: status }),
-    })
-      .then(res => res.json())
-      .then(updatedRow => {
+    axios.put(`http://localhost:3001/demandesfin/${id}`, { statuts: status })
+      .then(response => {
+        const updatedRow = response.data;
         setData(data.map(item => (item.IDDemandes_Fin === id ? updatedRow : item)));
       })
       .catch(err => {
@@ -50,16 +56,41 @@ function GestionOpportunites() {
   const viewRow = (id) => {
     const row = data.find(item => item.IDDemandes_Fin === id);
     setSelectedRow(row);
+    setShowModal(true);
+  };
+
+  const sanitizeValue = (value) => {
+    if (value && typeof value === 'object') {
+      return JSON.stringify(value);
+    }
+    return value;
   };
 
   const csvData = data.map(item => ({
-    ...item,
-    key: item.IDDemandes_Fin,
-    label: 'Actions',
+    IDDemandes_Fin: item.IDDemandes_Fin,
+    DF_Date: item.DF_Date,
+    Cl_Type: item.Cl_Type,
+    Cl_Nom: item.Cl_Nom,
+    Cl_Prenom: item.Cl_Prenom,
+    Cl_Sigle: item.Cl_Sigle,
+    KFJUR: item.KFJUR,
+    KRGM: item.KRGM ? JSON.stringify(item.KRGM) : '',
+    Cl_Capital: item.Cl_Capital,
+    KNATS_S: item.KNATS_S,
+    DF_Type_Projet: item.DF_Type_Projet,
+    DF_Montant_HT: item.DF_Montant_HT,
+    DF_TVA: item.DF_TVA,
+    DF_Montant_TTC: item.DF_Montant_TTC,
+    DF_Auto_FinTTC: item.DF_Auto_FinTTC,
+    DF_Durée: item.DF_Durée,
+    DF_Taux: item.DF_Taux,
+    DF_TEG: item.DF_TEG,
+    Statuts: item.statuts
   }));
 
   return (
     <div>
+      <h1>Gestion Opportunités</h1>
       <table>
         <thead>
           <tr>
@@ -86,27 +117,27 @@ function GestionOpportunites() {
           </tr>
         </thead>
         <tbody>
-          {data.map((item, index) => (
-            <tr key={index}>
-              <td>{item.IDDemandes_Fin}</td>
-              <td>{item.DF_Date}</td>
-              <td>{item.Cl_Type}</td>
-              <td>{item.Cl_Nom}</td>
-              <td>{item.Cl_Prenom}</td>
-              <td>{item.Cl_Sigle}</td>
-              <td>{item.KFJUR}</td>
-              <td>{item.KRGM.data.join(', ')}</td>
-              <td>{item.Cl_Capital}</td>
-              <td>{item.KNATS_S.data.join(', ')}</td>
-              <td>{item.DF_Type_Projet}</td>
-              <td>{item.DF_Montant_HT}</td>
-              <td>{item.DF_TVA}</td>
-              <td>{item.DF_Montant_TTC}</td>
-              <td>{item.DF_Auto_FinTTC}</td>
-              <td>{item.DF_Durée}</td>
-              <td>{item.DF_Taux}</td>
-              <td>{item.DF_TEG}</td>
-              <td>{item.statuts}</td>
+          {Array.isArray(data) && data.map((item) => (
+            <tr key={item.IDDemandes_Fin}>
+              <td>{sanitizeValue(item.IDDemandes_Fin)}</td>
+              <td>{sanitizeValue(item.DF_Date)}</td>
+              <td>{sanitizeValue(item.Cl_Type)}</td>
+              <td>{sanitizeValue(item.Cl_Nom)}</td>
+              <td>{sanitizeValue(item.Cl_Prenom)}</td>
+              <td>{sanitizeValue(item.Cl_Sigle)}</td>
+              <td>{sanitizeValue(item.KFJUR)}</td>
+              <td>{sanitizeValue(item.KRGM)}</td>
+              <td>{sanitizeValue(item.Cl_Capital)}</td>
+              <td>{sanitizeValue(item.KNATS_S)}</td>
+              <td>{sanitizeValue(item.DF_Type_Projet)}</td>
+              <td>{sanitizeValue(item.DF_Montant_HT)}</td>
+              <td>{sanitizeValue(item.DF_TVA)}</td>
+              <td>{sanitizeValue(item.DF_Montant_TTC)}</td>
+              <td>{sanitizeValue(item.DF_Auto_FinTTC)}</td>
+              <td>{sanitizeValue(item.DF_Durée)}</td>
+              <td>{sanitizeValue(item.DF_Taux)}</td>
+              <td>{sanitizeValue(item.DF_TEG)}</td>
+              <td>{sanitizeValue(item.statuts)}</td>
               <td>
                 <button onClick={() => viewRow(item.IDDemandes_Fin)}>Lire</button>
                 <button onClick={() => deleteRow(item.IDDemandes_Fin)}>Supprimer</button>
@@ -117,33 +148,30 @@ function GestionOpportunites() {
           ))}
         </tbody>
       </table>
-      {selectedRow && (
-        <div className="selected-row-details">
-          <h2>Selected Row Details</h2>
-          <p>IDDemandes_Fin: {selectedRow.IDDemandes_Fin}</p>
-          <p>Date: {selectedRow.DF_Date}</p>
-          <p>Type Client: {selectedRow.Cl_Type}</p>
-          <p>Nom: {selectedRow.Cl_Nom}</p>
-          <p>Prénom: {selectedRow.Cl_Prenom}</p>
-          <p>Sigle: {selectedRow.Cl_Sigle}</p>
-          <p>KFJUR: {selectedRow.KFJUR}</p>
-          <p>KRGM: {selectedRow.KRGM.data.join(', ')}</p>
-          <p>Capital: {selectedRow.Cl_Capital}</p>
-          <p>KNATS_S: {selectedRow.KNATS_S.data.join(', ')}</p>
-          <p>Type Projet: {selectedRow.DF_Type_Projet}</p>
-          <p>Montant HT: {selectedRow.DF_Montant_HT}</p>
-          <p>TVA: {selectedRow.DF_TVA}</p>
-          <p>Montant TTC: {selectedRow.DF_Montant_TTC}</p>
-          <p>Auto Fin TTC: {selectedRow.DF_Auto_FinTTC}</p>
-          <p>Durée: {selectedRow.DF_Durée}</p>
-          <p>Taux: {selectedRow.DF_Taux}</p>
-          <p>TEG: {selectedRow.DF_TEG}</p>
-          <p>Statuts: {selectedRow.statuts}</p>
+      {showModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2>Selected Row Details</h2>
+            {Object.keys(selectedRow).map((key) => (
+              <p key={key}>{key}: {typeof selectedRow[key] === 'object' ? JSON.stringify(selectedRow[key]) : selectedRow[key]}</p>
+            ))}
+            <button onClick={() => setShowModal(false)}>Close</button>
+          </div>
         </div>
       )}
-      <CSVLink data={csvData} filename="demandes_fin.csv">Download CSV</CSVLink>
-    </div>
-  );
+      {showModal1 && (
+        <div className="modal">
+          <div
+          className="modal-content">
+          <h2>Row Deleted!</h2>
+          <p>Row with ID {deletedRowId} has been deleted.</p>
+          <button onClick={() => setShowModal1(false)}>Close</button>
+        </div>
+      </div>
+    )}
+    <CSVLink className='button-24' data={csvData} filename="demandes_fin.csv">Download CSV</CSVLink>
+  </div>
+);
 }
 
 export default GestionOpportunites;
