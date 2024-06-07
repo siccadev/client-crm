@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import smart from './images/smart.jpeg';
 import 'tailwindcss/tailwind.css'; // Import Tailwind CSS
 import './styles.css/login.css';
+import { useSetRecoilState } from 'recoil';
+import { userState } from '../Recoil/Rstore';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -10,6 +12,7 @@ const Login = () => {
   const [error, setError] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
+  const setUser = useSetRecoilState(userState);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,22 +37,16 @@ const Login = () => {
 
       const data = await response.json();
       if (data.success) {
-        document.cookie = `userRole=${data.role}; HttpOnly; Secure; Path=/`;
-
         // Fetch user data
         const userResponse = await fetch(`http://localhost:3001/user/${username}`);
         const userData = await userResponse.json();
+        setUser(userData);
 
-        switch (data.role) {
-          case 'admin':
-            navigate('/dashboardadmin', { state: { userData } });
-            break;
-          case 'client':
-            navigate('/dashboardclient', { state: { userData } });
-            break;
-          default:
-            setError('The user role is not recognized.');
-        }
+        // Properly set the cookie with the correct SameSite attribute
+        document.cookie = `userRole=${data.role}; SameSite=None; Secure; Path=/`;
+
+        // Navigate to the dashboard or appropriate page
+        navigate('/dashboardclient');
       } else {
         setError(data.message);
       }
@@ -61,7 +58,7 @@ const Login = () => {
 
   return (
     <div className='auth flex items-center justify-center'>
-      <img src={smart} alt="Smart logo" className='w-32 h-32 mb-4'/>
+      <img src={smart} alt="Smart logo" className='w-32 h-32 mb-4' />
       {error && <p className='text-red-500'>{error}</p>}
       <form onSubmit={handleSubmit} className='w-full max-w-md'>
         <h1 className='text-2xl font-bold mb-4'>Connexion</h1>

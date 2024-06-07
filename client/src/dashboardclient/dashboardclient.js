@@ -4,6 +4,9 @@ import SidebarC from './sidebarclient';
 import Header from './headerclient';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Make sure to import Bootstrap CSS
 import axios from 'axios';
+import { userState } from '../Recoil/Rstore';
+import { useRecoilValue } from 'recoil';
+import ReconnectingWebSocket from 'reconnecting-websocket';
 
 const DashboardClient = () => {
   const [totalDemands, setTotalDemands] = useState(0);
@@ -11,41 +14,66 @@ const DashboardClient = () => {
   const [notApprovedDemands, setNotApprovedDemands] = useState(0);
   const [processingDemands, setProcessingDemands] = useState(0);
   const navigate = useNavigate();
+  const user = useRecoilValue(userState);
 
   useEffect(() => {
-    // Fetch the demands from the backend
-    const fetchDemands = async () => {
+    const fetchCounts = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/demandesfin');
-        const data = response.data;
+        const userID = user.id;
 
-        // Logging to debug
-        console.log('Fetched data:', data);
+        // Total Demands Count
+        const totalResponse = await axios.get(`http://localhost:3001/demandesfin/user/${userID}/count`);
+        const total = totalResponse.data.data;
 
-        // Calculate the counts based on the data
-        const total = data.length;
-        const approved = data.filter(demand => demand.statuts === 'Approved').length;
-        const notApproved = data.filter(demand => demand.statuts === 'Declined').length;
-        const processing = data.filter(demand => demand.statuts === 'Processing').length;
+        // Approved Demands Count
+        const approvedResponse = await axios.get(`http://localhost:3001/demandesfin/user/${userID}/approved/count`);
+        const approved = approvedResponse.data.data;
 
-        // Logging to debug
-        console.log('Total demands:', total);
-        console.log('Approved demands:', approved);
-        console.log('Not approved demands:', notApproved);
-        console.log('Processing demands:', processing);
+        // Not Approved Demands Count
+        const notApprovedResponse = await axios.get(`http://localhost:3001/demandesfin/user/${userID}/not-approved/count`);
+        const notApproved = notApprovedResponse.data.data;
+
+        // Still Processing Demands Count
+        const processingResponse = await axios.get(`http://localhost:3001/demandesfin/user/${userID}/still-processing/count`);
+        const processing = processingResponse.data.data;
 
         // Update the state with the counts
         setTotalDemands(total);
         setApprovedDemands(approved);
         setNotApprovedDemands(notApproved);
         setProcessingDemands(processing);
+
       } catch (error) {
-        console.error('Error fetching demands:', error);
+        console.error('Error fetching counts:', error);
       }
     };
 
-    fetchDemands();
-  }, []); // Run only once on component mount
+    fetchCounts();
+
+    // Setup WebSocket connection
+    const rws = new ReconnectingWebSocket('ws://localhost:3001');
+
+    rws.onopen = () => {
+      console.log('WebSocket connection opened');
+    };
+
+    rws.onmessage = (event) => {
+      const updatedData = JSON.parse(event.data);
+      // Update state based on the received data
+      setTotalDemands(updatedData.totalDemands);
+      setApprovedDemands(updatedData.approvedDemands);
+      setNotApprovedDemands(updatedData.notApprovedDemands);
+      setProcessingDemands(updatedData.processingDemands);
+    };
+
+    rws.onclose = () => {
+      console.log('WebSocket connection closed');
+    };
+
+    return () => {
+      rws.close();
+    };
+  }, [user.id]);
 
   const handleNavigate = (status) => {
     navigate(`/gestion-opportunites/${status}`);
