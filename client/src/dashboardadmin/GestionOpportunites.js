@@ -9,21 +9,11 @@ function GestionOpportunites() {
   const [showModal, setShowModal] = useState(false);
   const [showModal1, setShowModal1] = useState(false);
   const [deletedRowId, setDeletedRowId] = useState(null);
-  const [user, setUser] = useState({});
-
-  useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-    setUser(storedUser);
-  }, []);
 
   useEffect(() => {
     axios.get('http://localhost:3001/demandesfin')
       .then(response => {
-        console.log('Fetched data:', response.data);
-
-        if (Array.isArray(response.data)) {
-          setData(response.data);
-        } else if (response.data && typeof response.data === 'object' && Array.isArray(response.data.data)) {
+        if (Array.isArray(response.data.data)) {
           setData(response.data.data);
         } else {
           throw new Error('Data is not an array');
@@ -47,9 +37,9 @@ function GestionOpportunites() {
   };
 
   const updateStatus = (id, status) => {
-    axios.put(`http://localhost:3001/demandesfin/${id}`, { statuts: status })
+    axios.put(`http://localhost:3001/demandesfin/${id}`, { status: status })  // Corrected here
       .then(response => {
-        const updatedRow = response.data;
+        const updatedRow = response.data.data[0];  // Assuming the API returns the updated row in this structure
         const newState = status === 'Approved' ? 2 : 0; // 2 for approved, 0 for not approved
         const updatedDemand = { ...updatedRow, state: newState };
         setData(data.map(item => (item.IDDemandes_Fin === id ? updatedDemand : item)));
@@ -96,7 +86,6 @@ function GestionOpportunites() {
   return (
     <div>
       <h1>Gestion Opportunités</h1>
-      <h2>Welcome, {user.username}</h2>
       <table>
         <thead>
           <tr>

@@ -4,35 +4,34 @@ import SidebarC from './sidebarclient';
 import Header from './headerclient';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Make sure to import Bootstrap CSS
 import axios from 'axios';
-
+import { userState } from '../Recoil/Rstore';
+import { useRecoilValue } from 'recoil';
 const DashboardClient = () => {
   const [totalDemands, setTotalDemands] = useState(0);
   const [approvedDemands, setApprovedDemands] = useState(0);
   const [notApprovedDemands, setNotApprovedDemands] = useState(0);
   const [processingDemands, setProcessingDemands] = useState(0);
   const navigate = useNavigate();
+  const user = useRecoilValue(userState);
 
   useEffect(() => {
-    // Fetch the demands from the backend
-    const fetchDemands = async () => {
+    const fetchCounts = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/demandesfin');
-        const data = response.data;
+        const userID = user.id;
 
-        // Logging to debug
-        console.log('Fetched data:', data);
+        // Fetch counts from the backend
+        const [totalResponse, approvedResponse, notApprovedResponse, processingResponse] = await Promise.all([
+          axios.get(`http://localhost:3001/demandesfin/user/${userID}/count`),
+          axios.get(`http://localhost:3001/demandesfin/user/${userID}/approved/count`),
+          axios.get(`http://localhost:3001/demandesfin/user/${userID}/not-approved/count`),
+          axios.get(`http://localhost:3001/demandesfin/user/${userID}/still-processing/count`)
+        ]);
 
-        // Calculate the counts based on the data
-        const total = data.length;
-        const approved = data.filter(demand => demand.statuts === 'Approved').length;
-        const notApproved = data.filter(demand => demand.statuts === 'Declined').length;
-        const processing = data.filter(demand => demand.statuts === 'Processing').length;
-
-        // Logging to debug
-        console.log('Total demands:', total);
-        console.log('Approved demands:', approved);
-        console.log('Not approved demands:', notApproved);
-        console.log('Processing demands:', processing);
+        // Extract counts from responses
+        const total = totalResponse.data.data;
+        const approved = approvedResponse.data.data;
+        const notApproved = notApprovedResponse.data.data;
+        const processing = processingResponse.data.data;
 
         // Update the state with the counts
         setTotalDemands(total);
@@ -40,12 +39,19 @@ const DashboardClient = () => {
         setNotApprovedDemands(notApproved);
         setProcessingDemands(processing);
       } catch (error) {
-        console.error('Error fetching demands:', error);
+        console.error('Error fetching counts:', error);
       }
     };
 
-    fetchDemands();
-  }, []); // Run only once on component mount
+    // Fetch counts initially
+    fetchCounts();
+
+    // Polling mechanism: Fetch counts every 10 seconds
+    const pollingInterval = setInterval(fetchCounts, 10000);
+
+    // Cleanup function to clear interval on component unmount
+    return () => clearInterval(pollingInterval);
+  }, [user.id]);
 
   const handleNavigate = (status) => {
     navigate(`/gestion-opportunites/${status}`);
@@ -102,3 +108,4 @@ const DashboardClient = () => {
 };
 
 export default DashboardClient;
+

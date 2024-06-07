@@ -8,15 +8,18 @@ import Page5 from './Page5';
 import './demande.css';
 import Header from './headerclient';
 import SidebarC from './sidebarclient';
+import { userState } from '../Recoil/Rstore';
+import { useRecoilValue } from 'recoil';
 
 const DemandeFinForm = () => {
   const location = useLocation();
-  const userData = location.state?.userData;
   const navigate = useNavigate();
-  console.log("Received userData:", userData);
+  const user = useRecoilValue(userState);
+
+  console.log("Received userData:", user.id);
 
   const [demandeFin, setDemandeFin] = useState({
-    UserID: userData?.id,
+    UserID: user.id,
     DF_Date: '',
     Cl_RaiSoc: '',
     Cl_Type: '',
@@ -95,7 +98,7 @@ const DemandeFinForm = () => {
     };
 
     fetchApprovalStatus();
-  }, []); // Run only once on component mount
+  }, []);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
