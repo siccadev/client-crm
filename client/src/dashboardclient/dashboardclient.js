@@ -54,9 +54,17 @@ const DashboardClient = () => {
   }, [user.id]);
 
   const handleNavigate = (status) => {
-    navigate(`/gestion-opportunites/${status}`);
+    navigate(`/Total`);
   };
-
+  const handleNavigate1 = (status) => {
+    navigate(`/Approved`);
+  };
+  const handleNavigate2 = (status) => {
+    navigate(`/Notapproved`);
+  };
+  const handleNavigate3 = (status) => {
+    navigate(`/Processing`);
+  };
   return (
     <div>
       <Header />
@@ -64,7 +72,7 @@ const DashboardClient = () => {
       <div className="container mt-5">
         <div className="row">
           <div className="col-md-4">
-            <div className="card" onClick={() => handleNavigate('all')}>
+            <div className="card" onClick={() => handleNavigate()}>
               <div className="card-body">
                 <h5 className="card-title">Total Demands</h5>
                 <h6 className="card-subtitle mb-2 text-muted">Finance Demands Filled</h6>
@@ -73,7 +81,7 @@ const DashboardClient = () => {
             </div>
           </div>
           <div className="col-md-4">
-            <div className="card" onClick={() => handleNavigate('approved')}>
+            <div className="card" onClick={() => handleNavigate1('Approved')}>
               <div className="card-body">
                 <h5 className="card-title">Approved Demands</h5>
                 <h6 className="card-subtitle mb-2 text-muted">Number of Approved Demands</h6>
@@ -82,7 +90,7 @@ const DashboardClient = () => {
             </div>
           </div>
           <div className="col-md-4">
-            <div className="card" onClick={() => handleNavigate('declined')}>
+            <div className="card" onClick={() => handleNavigate2('Notapproved')}>
               <div className="card-body">
                 <h5 className="card-title">Not Approved Demands</h5>
                 <h6 className="card-subtitle mb-2 text-muted">Number of Not Approved Demands</h6>
@@ -93,7 +101,7 @@ const DashboardClient = () => {
         </div>
         <div className="row mt-3">
           <div className="col-md-12">
-            <div className="card" onClick={() => handleNavigate('processing')}>
+            <div className="card" onClick={() => handleNavigate3('Processing')}>
               <div className="card-body">
                 <h5 className="card-title">Processing Demands</h5>
                 <h6 className="card-subtitle mb-2 text-muted">Number of Demands that are still being processed</h6>

@@ -70,7 +70,7 @@ const DemandeFinForm = () => {
     DF_Hyp_Objet: '',
     DF_Hyp_Val: '',
     state: 1,
-    approvalStatus: 'not approved',
+    approvalStatus: 'Processing',
   });
 
   const [currentPage, setCurrentPage] = useState(1);

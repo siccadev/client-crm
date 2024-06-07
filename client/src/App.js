@@ -10,6 +10,10 @@ import Home from './home/Home';
 import Dashboard from './home/dashboard';
 import GestionOpportunites from './dashboardadmin/GestionOpportunites';
 import Profile from './dashboardclient/profile.js';
+import Total from './dashboardclient/Total.js'
+import Approved from './dashboardclient/Approved.js'
+import Notapproved from './dashboardclient/Notapproved.js';
+import Processing from './dashboardclient/Processing.js'
 import { RecoilRoot } from 'recoil';
 
 
@@ -30,7 +34,10 @@ function App() {
           <Route path="/demendesfin" element={<DemandeFinForm />} />
           <Route path="/gestion-opportunites" element={<GestionOpportunites />} />
           <Route path="/profile" element={<Profile />} />
-
+          <Route path="/Notapproved" element={<Notapproved />} />
+          <Route path="/Approved" element={<Approved />} />
+          <Route path="/Total" element={<Total />} />
+          <Route path="/Processing" element={<Processing />} />
           <Route path="/" element={<DashboardClient />} />
           <Route path="/gestion-opportunites/:status" element={<GestionOpportunites />} />
         </Routes>
