@@ -10,16 +10,18 @@ import Home from './home/Home';
 import Dashboard from './home/dashboard';
 import GestionOpportunites from './dashboardadmin/GestionOpportunites';
 import Profile from './dashboardclient/profile.js';
+import { RecoilRoot } from 'recoil';
 
 
 
 function App() {
   return (
-    <Router>
+    <RecoilRoot>
+      <Router>
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/dashboardadmin" element={<DashboardAdmin />} />
-          <Route path="/dashboardclient" element={<DashboardClient/>} />
+          <Route path="/dashboardclient" element={<DashboardClient />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/home" element={<Home />} />
           <Route path="/register" element={<Register />} />
@@ -32,7 +34,9 @@ function App() {
           <Route path="/" element={<DashboardClient />} />
           <Route path="/gestion-opportunites/:status" element={<GestionOpportunites />} />
         </Routes>
-    </Router>
+      </Router>
+    </RecoilRoot>
+
   );
 }
 
