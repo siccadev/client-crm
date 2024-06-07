@@ -67,7 +67,7 @@ const DemandeFinForm = () => {
     DF_Hyp_Objet: '',
     DF_Hyp_Val: '',
     state: 1,
-    approvalStatus: 'not approved', // New field to track approval status
+    approvalStatus: 'not approved',
   });
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -171,6 +171,16 @@ const DemandeFinForm = () => {
       {submissionState === 1 && (
         <div className="processing-box">
           <p>Votre demande est en cours de traitement.</p>
+        </div>
+      )}
+      {submissionState === 0 && (
+        <div className="not-approved-box">
+          <p>Votre demande n'a pas été approuvée.</p>
+        </div>
+      )}
+      {submissionState === 2 && (
+        <div className="approved-box">
+          <p>Votre demande a été approuvée.</p>
         </div>
       )}
     </div>

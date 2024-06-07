@@ -19,8 +19,6 @@ function GestionOpportunites() {
   useEffect(() => {
     axios.get('http://localhost:3001/demandesfin')
       .then(response => {
-        console.log('Response Status:', response.status);
-        console.log('Response Headers:', response.headers);
         console.log('Fetched data:', response.data);
 
         if (Array.isArray(response.data)) {
@@ -68,10 +66,7 @@ function GestionOpportunites() {
   };
 
   const sanitizeValue = (value) => {
-    if (value && typeof value === 'object') {
-      return JSON.stringify(value);
-    }
-    return value;
+    return value && typeof value === 'object' ? JSON.stringify(value) : value;
   };
 
   const csvData = data.map(item => ({
@@ -94,7 +89,8 @@ function GestionOpportunites() {
     DF_Durée: item.DF_Durée,
     DF_Taux: item.DF_Taux,
     DF_TEG: item.DF_TEG,
-    Statuts: item.statuts
+    Statuts: item.statuts,
+    State: item.state
   }));
 
   return (
@@ -121,11 +117,10 @@ function GestionOpportunites() {
             <th>DF_Montant_TTC</th>
             <th>DF_Auto_FinTTC</th>
             <th>DF_Durée</th>
-            <th>DF_Taux</
-            th>
+            <th>DF_Taux</th>
             <th>DF_TEG</th>
             <th>Statuts</th>
-            <th>state</th>
+            <th>State</th>
             <th>Actions</th>
           </tr>
         </thead>

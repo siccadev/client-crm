@@ -162,7 +162,7 @@ app.get('/demandesfin',(req,res)=>{
   });
 });
 app.post('/demandesfin', (req, res) => {
-  const demandeFin = { ...req.body, state: 1, approvalStatus: 'not approved' }; // Include approvalStatus field
+  const demandeFin = { ...req.body, state: 1, approvalStatus: 'not approved' };
   const query = 'INSERT INTO demandes_fin SET ?';
 
   connection.query(query, demandeFin, (err, results) => {
