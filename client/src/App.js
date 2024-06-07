@@ -29,7 +29,8 @@ function App() {
           <Route path="/gestion-opportunites" element={<GestionOpportunites />} />
           <Route path="/profile" element={<Profile />} />
 
-
+          <Route path="/" element={<DashboardClient />} />
+          <Route path="/gestion-opportunites/:status" element={<GestionOpportunites />} />
         </Routes>
     </Router>
   );
