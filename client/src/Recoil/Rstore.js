@@ -5,8 +5,4 @@ export const userState = atom({
   default: null,
 });
 
-export const demandState = atom({
-  key: 'demandState',
-  default: null,
-});
 

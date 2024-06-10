@@ -290,6 +290,20 @@ app.post('/reset-password', (req, res) => {
 });
 
 
+app.delete('/contracts/:id', (req, res) => {
+  const id = req.params.id;
+  const sql = 'DELETE FROM contracts WHERE contract_id = ?';
+  connection.query(sql, id, (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: 'Error deleting data' });
+    }
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ message: 'Contract not found' });
+    }
+    res.status(200).json({ message: 'Data deleted successfully', data: results });
+  });
+});
 
 app.post('/contart', (req, res) => {
   const contrat = req.body;
@@ -318,6 +332,23 @@ app.get('/contart', (req, res) => {
 });
 
 
+app.get('/contracts/:id', (req, res) => {
+  const { id } = req.params;
+  const query = 'SELECT * FROM contracts WHERE contract_id = ?';
+
+  connection.query(query, [id], (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: 'Error fetching contract data' });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'Contract not found' });
+    }
+
+    res.status(200).json({ message: 'Contract fetched successfully', data: results[0] });
+  });
+});
 
 
 
