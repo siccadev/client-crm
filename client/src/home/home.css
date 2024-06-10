@@ -128,7 +128,6 @@ header {
   height: 25rem;
   margin: 5px;
   border-radius: 2%;
-  box-shadow: 0 2px 10px rgb(0, 0, 0);
 
 
 }
@@ -189,10 +188,10 @@ header {
 
 /*why*/
 .why-us-section {
+  background-color: #f7f7f7; /* Light grey background for contrast */
   padding: 2rem; /* Add padding for spacing */
   border-radius: 10px; /* Rounded corners */
   margin: 2rem 0; /* Margin to separate from other sections */
-  margin-left: 30%;
 }
 
 .why-us-section .title {
@@ -251,7 +250,7 @@ header {
 
 }
 .us{
-  height: 350px;
+  height: 340px;
   width: 700px;
   margin-top: -29%;
   border-radius: 18px;
@@ -308,5 +307,3 @@ header {
 .contact-value:hover {
   text-decoration: underline;
 }
-
-

@@ -35,7 +35,7 @@ const SidebarC = () => {
           </NavLink>
         </li>
         <li className="nav-item">
-          <NavLink to="/update-profile" activeClassName="active" onClick={() => onSelectModule('Profile')} className="nav-link">
+          <NavLink to="/profile" activeClassName="active" onClick={() => onSelectModule('Profile')} className="nav-link">
             <i className="bi bi-person-fill"></i>
             <span>Profile</span>
           </NavLink>
