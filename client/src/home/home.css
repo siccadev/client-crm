@@ -1,4 +1,3 @@
-/* home.css */
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
@@ -19,7 +18,7 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  
+
 }
 
 
@@ -28,7 +27,7 @@ header {
   color: white;
   padding: 10px 0;
   text-align: center;
-  
+
 }
 
 .intro-section {
@@ -43,7 +42,7 @@ header {
   margin: 0 auto;
   padding: 0 20px;
 
-  
+
 }
 
 .main-title {
@@ -59,7 +58,7 @@ header {
 }
 
 .description {
-  color: black ;
+  color: black;
   font-size: 20px;
   text-align: left;
   font-weight: bold;
@@ -71,7 +70,7 @@ header {
 .buttons {
   display: flex;
   justify-content: left;
-  
+
 }
 
 .login-button,
@@ -118,19 +117,21 @@ header {
   justify-content: flex-end;
   position: relative;
   margin-top: 2%;
-  
+
 }
 
 .home-logo {
   position: absolute;
-  top:-220px;
+  top: -220px;
   width: 60rem;
   height: 25rem;
   margin: 5px;
   border-radius: 2%;
+  box-shadow: 0 2px 10px rgb(0, 0, 0);
 
 
 }
+
 .middle {
   transition: .5s ease;
   opacity: 0;
@@ -188,45 +189,68 @@ header {
 
 /*why*/
 .why-us-section {
-  background-color: #f7f7f7; /* Light grey background for contrast */
-  padding: 2rem; /* Add padding for spacing */
-  border-radius: 10px; /* Rounded corners */
-  margin: 2rem 0; /* Margin to separate from other sections */
+  padding: 2rem;
+  /* Add padding for spacing */
+  border-radius: 10px;
+  /* Rounded corners */
+  margin: 2rem 0;
+  /* Margin to separate from other sections */
+  margin-left: 30%;
 }
 
 .why-us-section .title {
-  font-size: 2rem; /* Larger font size for the title */
-  color: #333; /* Dark grey color for the title */
-  margin-bottom: 1rem; /* Space below the title */
-  text-align: center; /* Center align the title */
+  font-size: 2rem;
+  /* Larger font size for the title */
+  color: #333;
+  /* Dark grey color for the title */
+  margin-bottom: 1rem;
+  /* Space below the title */
+  text-align: center;
+  /* Center align the title */
 }
 
 .why-us-section .reasons-list {
-  list-style-type: none; /* Remove default list styling */
-  padding-left: 0; /* Remove default padding */
+  list-style-type: none;
+  /* Remove default list styling */
+  padding-left: 0;
+  /* Remove default padding */
 }
 
 .why-us-section .reason {
-  font-size: 1.2rem; /* Slightly larger font for reasons */
-  color: #555; /* Medium grey color for reasons */
-  margin: 0.5rem 0; /* Space between list items */
-  padding-left: 2rem; /* Padding to align with icon */
-  position: relative; /* Positioning for custom icons */
+  font-size: 1.2rem;
+  /* Slightly larger font for reasons */
+  color: #555;
+  /* Medium grey color for reasons */
+  margin: 0.5rem 0;
+  /* Space between list items */
+  padding-left: 2rem;
+  /* Padding to align with icon */
+  position: relative;
+  /* Positioning for custom icons */
 }
 
 .why-us-section .reason i {
-  color: #eb4d4b; /* Red color for the icons */
-  font-size: 1.5rem; /* Larger icon size */
-  position: absolute; /* Absolute positioning */
-  left: 0; /* Align to the left */
-  top: 0; /* Align to the top */
+  color: #eb4d4b;
+  /* Red color for the icons */
+  font-size: 1.5rem;
+  /* Larger icon size */
+  position: absolute;
+  /* Absolute positioning */
+  left: 0;
+  /* Align to the left */
+  top: 0;
+  /* Align to the top */
 }
 
 .why-us-section p {
-  font-size: 1rem; /* Standard font size for the paragraph */
-  color: #555; /* Medium grey color for the paragraph */
-  margin-top: 1rem; /* Space above the paragraph */
-  text-align: center; /* Center align the paragraph */
+  font-size: 1rem;
+  /* Standard font size for the paragraph */
+  color: #555;
+  /* Medium grey color for the paragraph */
+  margin-top: 1rem;
+  /* Space above the paragraph */
+  text-align: center;
+  /* Center align the paragraph */
 }
 
 .contact-container {
@@ -246,11 +270,12 @@ header {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.548);
   padding: 20px;
   margin-left: 60%;
-  
+
 
 }
-.us{
-  height: 340px;
+
+.us {
+  height: 350px;
   width: 700px;
   margin-top: -29%;
   border-radius: 18px;
@@ -259,7 +284,8 @@ header {
 
 
 }
-.sectors-container{
+
+.sectors-container {
   max-width: 1724px;
   width: 100%;
   background-color: rgba(255, 239, 213, 0.591);
@@ -268,6 +294,7 @@ header {
   height: 310px;
 
 }
+
 .title {
   font-size: 24px;
   font-weight: 600;
@@ -287,7 +314,7 @@ header {
 
 .contact-item {
   margin-bottom: 15px;
-  
+
 }
 
 .contact-label {
