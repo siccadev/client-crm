@@ -6,11 +6,14 @@ import 'bootstrap/dist/css/bootstrap.min.css'; // Make sure to import Bootstrap 
 import axios from 'axios';
 import { userState } from '../Recoil/Rstore';
 import { useRecoilValue } from 'recoil';
+
 const DashboardClient = () => {
   const [totalDemands, setTotalDemands] = useState(0);
   const [approvedDemands, setApprovedDemands] = useState(0);
   const [notApprovedDemands, setNotApprovedDemands] = useState(0);
   const [processingDemands, setProcessingDemands] = useState(0);
+  const [feedback, setFeedback] = useState('');
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   const navigate = useNavigate();
   const user = useRecoilValue(userState);
 
@@ -57,11 +60,40 @@ const DashboardClient = () => {
     navigate(`/gestion-opportunites/${status}`);
   };
 
+  const submitFeedback = async () => {
+    try {
+      await axios.post('http://localhost:3001/feedback', { username: user.username, feedback });
+      setFeedback('');
+      setFeedbackSubmitted(true);
+    } catch (error) {
+      console.error('Error submitting feedback:', error);
+    }
+  };
+
   return (
     <div>
       <Header />
       <SidebarC />
       <div className="container mt-5">
+        {feedbackSubmitted ? (
+          <div className="alert alert-success" role="alert">
+            Feedback submitted successfully!
+          </div>
+        ) : (
+          <div className="form-group">
+            <label htmlFor="feedbackInput">Feedback</label>
+            <textarea
+              className="form-control"
+              id="feedbackInput"
+              rows="3"
+              value={feedback}
+              onChange={(e) => setFeedback(e.target.value)}
+            ></textarea>
+            <button className="btn btn-primary mt-3" onClick={submitFeedback}>
+              Submit Feedback
+            </button>
+          </div>
+        )}
         <div className="row">
           <div className="col-md-4">
             <div className="card" onClick={() => handleNavigate('all')}>
@@ -108,4 +140,3 @@ const DashboardClient = () => {
 };
 
 export default DashboardClient;
-
