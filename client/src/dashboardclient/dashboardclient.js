@@ -6,16 +6,24 @@ import 'bootstrap/dist/css/bootstrap.min.css'; // Make sure to import Bootstrap 
 import axios from 'axios';
 import { userState } from '../Recoil/Rstore';
 import { useRecoilValue } from 'recoil';
+
 const DashboardClient = () => {
   const [totalDemands, setTotalDemands] = useState(0);
   const [approvedDemands, setApprovedDemands] = useState(0);
   const [notApprovedDemands, setNotApprovedDemands] = useState(0);
   const [processingDemands, setProcessingDemands] = useState(0);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const user = useRecoilValue(userState);
 
   useEffect(() => {
     const fetchCounts = async () => {
+      if (!user || !user.id) {
+        console.error('User is not defined or does not have an ID');
+        navigate('/login'); // Redirect to login if user is not authenticated
+        return;
+      }
+
       try {
         const userID = user.id;
 
@@ -40,6 +48,8 @@ const DashboardClient = () => {
         setProcessingDemands(processing);
       } catch (error) {
         console.error('Error fetching counts:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -51,11 +61,15 @@ const DashboardClient = () => {
 
     // Cleanup function to clear interval on component unmount
     return () => clearInterval(pollingInterval);
-  }, [user.id]);
+  }, [user, navigate]);
 
   const handleNavigate = (status) => {
     navigate(`/gestion-opportunites/${status}`);
   };
+
+  if (loading) {
+    return <div>Loading...</div>; // Show a loading indicator while fetching data
+  }
 
   return (
     <div>
@@ -108,4 +122,3 @@ const DashboardClient = () => {
 };
 
 export default DashboardClient;
-

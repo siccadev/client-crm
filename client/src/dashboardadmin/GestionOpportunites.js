@@ -13,6 +13,7 @@ function GestionOpportunites() {
   useEffect(() => {
     axios.get('http://localhost:3001/demandesfin')
       .then(response => {
+        console.log('API response:', response.data); // Log de la réponse
         if (Array.isArray(response.data.data)) {
           setData(response.data.data);
         } else {
@@ -23,6 +24,7 @@ function GestionOpportunites() {
         console.error('Fetch error:', err);
       });
   }, []);
+  
 
   const deleteRow = (id) => {
     axios.delete(`http://localhost:3001/demandesfin/${id}`)
@@ -51,9 +53,12 @@ function GestionOpportunites() {
 
   const viewRow = (id) => {
     const row = data.find(item => item.IDDemandes_Fin === id);
-    setSelectedRow(row);
-    setShowModal(true);
+    if (row) {
+      setSelectedRow(row);
+      setShowModal(true);
+    }
   };
+  
 
   const sanitizeValue = (value) => {
     return value && typeof value === 'object' ? JSON.stringify(value) : value;
@@ -140,6 +145,7 @@ function GestionOpportunites() {
               <td>
                 <button onClick={() => viewRow(item.IDDemandes_Fin)}>Lire</button>
                 <button onClick={() => deleteRow(item.IDDemandes_Fin)}>Supprimer</button>
+                <button onClick={() => updateStatus(item.IDDemandes_Fin)}>Évaluer</button>
                 <button onClick={() => updateStatus(item.IDDemandes_Fin, 'Approved')}>Approve</button>
                 <button onClick={() => updateStatus(item.IDDemandes_Fin, 'Declined')}>Decline</button>
               </td>
