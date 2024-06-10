@@ -14,6 +14,7 @@ import Total from './dashboardclient/Total.js'
 import Approved from './dashboardclient/Approved.js'
 import Notapproved from './dashboardclient/Notapproved.js';
 import Processing from './dashboardclient/Processing.js'
+import Contract from './dashboardclient/Contarct.js'
 import { RecoilRoot } from 'recoil';
 
 
@@ -39,6 +40,8 @@ function App() {
           <Route path="/Total" element={<Total />} />
           <Route path="/Processing" element={<Processing />} />
           <Route path="/" element={<DashboardClient />} />
+          <Route path="/Contract" element={<Contract />} />
+
           <Route path="/gestion-opportunites/:status" element={<GestionOpportunites />} />
         </Routes>
       </Router>
