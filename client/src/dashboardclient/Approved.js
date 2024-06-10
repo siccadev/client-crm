@@ -4,10 +4,12 @@ import axios from 'axios';
 
 import { userState } from '../Recoil/Rstore';
 import { useRecoilValue } from 'recoil';
+import { useNavigate } from 'react-router-dom';
 function Approved() {
   const [data, setData] = useState([]);
 
   const user = useRecoilValue(userState);
+  const navigate = useNavigate();
   useEffect(() => {
     axios.get(`http://localhost:3001/demandesfin/user/${user.id}/approved`)
 
@@ -56,6 +58,10 @@ function Approved() {
     DF_TEG: item.DF_TEG,
     Statuts: item.statuts
   }));
+  const handleViewClick = (id) => {
+    // Implement the navigation or any other action you want to perform
+    navigate(`/Contract`);
+  };
 
   return (
     <div>
@@ -83,6 +89,7 @@ function Approved() {
             <th>DF_Taux</th>
             <th>DF_TEG</th>
             <th>Statuts</th>
+            <th>contrat en ligne </th>
            
           </tr>
         </thead>
@@ -109,7 +116,8 @@ function Approved() {
               <td>{sanitizeValue(item.DF_Taux)}</td>
               <td>{sanitizeValue(item.DF_TEG)}</td>
               <td>{sanitizeValue(item.approvalStatus)}</td>
-             
+              <td><button onClick={() => handleViewClick(item.IDDemandes_Fin)}>View</button></td>
+
               
             </tr>
           ))}

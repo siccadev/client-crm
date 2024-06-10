@@ -69,7 +69,7 @@ const DashboardClient = () => {
     <div>
       <Header />
       <SidebarC />
-      <div className="container mt-5">
+      <div className="container mt-10">
         <div className="row">
           <div className="col-md-4">
             <div className="card" onClick={() => handleNavigate()}>
