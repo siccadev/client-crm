@@ -4,6 +4,7 @@ import Headerhome from './Headerhome';
 import crm from './images/crm.jpg';
 import 'bootstrap-icons/font/bootstrap-icons.css'; // Import Bootstrap Icons
 import './home.css';
+import us from './images/us.jpeg';
 
 const Home = () => {
   return (
@@ -102,7 +103,10 @@ const Home = () => {
                 </li>
               </ul>
             </section>
+
           </div>
+          <img src={us} alt="crm logo" className="us" /> 
+
         </main>
       </div>
     </div>
