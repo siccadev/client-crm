@@ -116,7 +116,7 @@ function Total() {
         </tbody>
       </table>
 
-      <CSVLink data={csvData} filename={"demandesfin.csv"}>
+      <CSVLink className='button-24' data={csvData} filename={"demandesfin.csv"}>
         Export to CSV
       </CSVLink>
 
