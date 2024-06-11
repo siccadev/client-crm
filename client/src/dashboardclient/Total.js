@@ -4,13 +4,15 @@ import axios from 'axios';
 
 import { userState } from '../Recoil/Rstore';
 import { useRecoilValue } from 'recoil';
+
 function Total() {
   const [data, setData] = useState([]);
+  const [feedbacks, setFeedbacks] = useState({});
 
   const user = useRecoilValue(userState);
+
   useEffect(() => {
     axios.get(`http://localhost:3001/demandesfin/user/${user.id}`)
-
       .then(response => {
         if (Array.isArray(response.data.data)) {
           setData(response.data.data);
@@ -21,17 +23,34 @@ function Total() {
       .catch(err => {
         console.error('Fetch error:', err);
       });
-  }, []);
-
-
-
-
+  }, [user.id]);
 
   const sanitizeValue = (value) => {
     if (value && typeof value === 'object') {
       return JSON.stringify(value);
     }
     return value;
+  };
+
+  const handleFeedbackChange = (id, value) => {
+    setFeedbacks(prev => ({ ...prev, [id]: value }));
+  };
+
+  const handleFeedbackSubmit = async (id) => {
+    try {
+      const response = await axios.post(`http://localhost:3001/feedback`, {
+        username: user.id, 
+        feedback: feedbacks[id],
+      });
+      if (response.data.message) {
+        alert('Feedback submitted successfully!');
+      } else {
+        throw new Error('Submission failed');
+      }
+    } catch (error) {
+      console.error('Error submitting feedback:', error);
+      alert('Error submitting feedback. Please try again.');
+    }
   };
 
   const csvData = data.map(item => ({
@@ -83,7 +102,8 @@ function Total() {
             <th>DF_Taux</th>
             <th>DF_TEG</th>
             <th>Statuts</th>
-           
+            <th>Feedback</th>
+            <th>Submit Feedback</th>
           </tr>
         </thead>
         <tbody>
@@ -108,9 +128,17 @@ function Total() {
               <td>{sanitizeValue(item.DF_Durée)}</td>
               <td>{sanitizeValue(item.DF_Taux)}</td>
               <td>{sanitizeValue(item.DF_TEG)}</td>
-              <td>{sanitizeValue(item.approvalStatus)}</td>
-             
-              
+              <td>{sanitizeValue(item.statuts)}</td>
+              <td>
+                <input
+                  type="text"
+                  value={feedbacks[item.IDDemandes_Fin] || ''}
+                  onChange={(e) => handleFeedbackChange(item.IDDemandes_Fin, e.target.value)}
+                />
+              </td>
+              <td>
+                <button onClick={() => handleFeedbackSubmit(item.IDDemandes_Fin)}>Submit</button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -119,10 +147,6 @@ function Total() {
       <CSVLink className='button-24' data={csvData} filename={"demandesfin.csv"}>
         Export to CSV
       </CSVLink>
-
-     
-
-     
     </div>
   );
 }
