@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { CSVLink } from 'react-csv';
 import axios from 'axios';
-import './GestionOpportunites.css';
 
-function GestionOpportunites() {
+import { userState } from '../Recoil/Rstore';
+import { useRecoilValue } from 'recoil';
+
+function Total() {
   const [data, setData] = useState([]);
-  const [selectedRow, setSelectedRow] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  const [showModal1, setShowModal1] = useState(false);
-  const [deletedRowId, setDeletedRowId] = useState(null);
+  const [feedbacks, setFeedbacks] = useState({});
+
+  const user = useRecoilValue(userState);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/demandesfin')
+    axios.get(`http://localhost:3001/demandesfin/user/${user.id}`)
       .then(response => {
         if (Array.isArray(response.data.data)) {
           setData(response.data.data);
@@ -22,48 +23,34 @@ function GestionOpportunites() {
       .catch(err => {
         console.error('Fetch error:', err);
       });
-  }, []);
-
-  const deleteRow = (id) => {
-    axios.delete(`http://localhost:3001/demandesfin/${id}`)
-      .then(() => {
-        setData(data.filter(item => item.IDDemandes_Fin !== id));
-        setDeletedRowId(id);
-        setShowModal1(true);
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  };
-
-  const updateStatus = (id, status) => {
-    axios.put(`http://localhost:3001/demandesfin/${id}`, { status: status })  // Corrected here
-      .then(response => {
-        const updatedRow = response.data.data[0];  // Assuming the API returns the updated row in this structure
-        const newState = status === 'Approved' ? 2 : 0; // 2 for approved, 0 for not approved
-        const updatedDemand = data.find(item => item.IDDemandes_Fin === id);
-        if (updatedDemand) {
-          updatedDemand.state = newState;
-          updatedDemand.approvalStatus = status;
-          setData([...data]);
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  };
-
-  const viewRow = (id) => {
-    const row = data.find(item => item.IDDemandes_Fin === id);
-    setSelectedRow(row);
-    setShowModal(true);
-  };
+  }, [user.id]);
 
   const sanitizeValue = (value) => {
     if (value && typeof value === 'object') {
       return JSON.stringify(value);
     }
     return value;
+  };
+
+  const handleFeedbackChange = (id, value) => {
+    setFeedbacks(prev => ({ ...prev, [id]: value }));
+  };
+
+  const handleFeedbackSubmit = async (id) => {
+    try {
+      const response = await axios.post(`http://localhost:3001/feedback`, {
+        username: user.id, 
+        feedback: feedbacks[id],
+      });
+      if (response.data.message) {
+        alert('Feedback submitted successfully!');
+      } else {
+        throw new Error('Submission failed');
+      }
+    } catch (error) {
+      console.error('Error submitting feedback:', error);
+      alert('Error submitting feedback. Please try again.');
+    }
   };
 
   const csvData = data.map(item => ({
@@ -115,8 +102,8 @@ function GestionOpportunites() {
             <th>DF_Taux</th>
             <th>DF_TEG</th>
             <th>Statuts</th>
-            <th>state</th>
-            <th>Actions</th>
+            <th>Feedback</th>
+            <th>Submit Feedback</th>
           </tr>
         </thead>
         <tbody>
@@ -141,13 +128,16 @@ function GestionOpportunites() {
               <td>{sanitizeValue(item.DF_Durée)}</td>
               <td>{sanitizeValue(item.DF_Taux)}</td>
               <td>{sanitizeValue(item.DF_TEG)}</td>
-              <td>{sanitizeValue(item.approvalStatus)}</td>
-              <td>{sanitizeValue(item.state)}</td>
+              <td>{sanitizeValue(item.statuts)}</td>
               <td>
-                <button onClick={() => updateStatus(item.IDDemandes_Fin, 'Approved')}>Approve</button>
-                <button onClick={() => updateStatus(item.IDDemandes_Fin, 'Declined')}>Decline</button>
-                <button onClick={() => viewRow(item.IDDemandes_Fin)}>View</button>
-                <button onClick={() => deleteRow(item.IDDemandes_Fin)}>Delete</button>
+                <input
+                  type="text"
+                  value={feedbacks[item.IDDemandes_Fin] || ''}
+                  onChange={(e) => handleFeedbackChange(item.IDDemandes_Fin, e.target.value)}
+                />
+              </td>
+              <td>
+                <button onClick={() => handleFeedbackSubmit(item.IDDemandes_Fin)}>Submit</button>
               </td>
             </tr>
           ))}
@@ -157,31 +147,8 @@ function GestionOpportunites() {
       <CSVLink data={csvData} filename={"demandesfin.csv"}>
         Export to CSV
       </CSVLink>
-
-      {showModal && selectedRow && (
-        <div className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={() => setShowModal(false)}>&times;</span>
-            <h2>Demand Details</h2>
-            <p><strong>ID:</strong> {selectedRow.IDDemandes_Fin}</p>
-            <p><strong>User:</strong> {selectedRow.UserID}</p>
-            <p><strong>Date:</strong> {selectedRow.DF_Date}</p>
-            {/* Add more details as needed */}
-          </div>
-        </div>
-      )}
-
-      {showModal1 && (
-        <div className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={() => setShowModal1(false)}>&times;</span>
-            <h2>Row Deleted</h2>
-            <p>Row with ID {deletedRowId} has been deleted.</p>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
 
-export default GestionOpportunites;
+export default Total;

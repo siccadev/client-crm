@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:4306:4306
--- Generation Time: Jun 06, 2024 at 04:51 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Hôte : 127.0.0.1:4306
+-- Généré le : lun. 10 juin 2024 à 11:22
+-- Version du serveur : 10.4.32-MariaDB
+-- Version de PHP : 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,34 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `pfecrm`
+-- Base de données : `pfecrm`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `demandes_fin`
+-- Structure de la table `contracts`
+--
+
+CREATE TABLE `contracts` (
+  `contract_id` int(11) NOT NULL,
+  `contract_number` varchar(50) NOT NULL,
+  `contract_type` varchar(50) NOT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `financing_mode` varchar(50) NOT NULL,
+  `monthly_amount` decimal(10,2) NOT NULL,
+  `equipment_type` varchar(100) NOT NULL,
+  `owner_first_name` varchar(50) NOT NULL,
+  `owner_last_name` varchar(50) NOT NULL,
+  `electronic_signature` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `demandes_fin`
 --
 
 CREATE TABLE `demandes_fin` (
@@ -86,27 +107,33 @@ CREATE TABLE `demandes_fin` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
--- Dumping data for table `demandes_fin`
+-- Déchargement des données de la table `demandes_fin`
 --
 
 INSERT INTO `demandes_fin` (`IDDemandes_Fin`, `UserID`, `DF_Date`, `Cl_Type`, `Cl_RaiSoc`, `Cl_Nom`, `Cl_Prenom`, `Cl_Sigle`, `KTPM`, `KFJUR`, `KRGM`, `Cl_RC_UI`, `Cl_Mat_Fisc`, `Cl_Att_Agr`, `Cl_Date_Creat`, `Cl_Capital`, `Cl_Adresse`, `KLOC`, `KTIDPM`, `Cl_NumIdPM`, `KNATS_S`, `GSCode`, `Cl_Fonct_Lien_Polit`, `Cl_Patrimoine`, `Cl_Val_Patrimoine`, `Cl_Regime_Matrimonial`, `Cl_BE_Nom_Prenom`, `Cl_BE_KTIDPM`, `Cl_BE_NumId`, `Cl_BE_Adresse`, `Cl_BE_KPAYS`, `DF_Type_Projet`, `DF_Projet`, `DF_Montant_HT`, `DF_TVA`, `DF_Montant_TTC`, `DF_Auto_FinTTC`, `DF_Durée`, `Type_Taux`, `DF_Taux`, `DF_TEG`, `DF_Periode`, `IDSuccursales`, `DF_Provenance`, `DF_Charge_Dossier`, `DF_RIB`, `DF_Caution_NP`, `DF_Caution_CIN`, `DF_Hyp_NP`, `DF_Hyp_CIN`, `DF_Hyp_Objet`, `DF_Hyp_Val`, `status`, `state`, `approvalStatus`) VALUES
-(7, 0, '0000-00-00', 0, '\'Leasing Solutions Finances\'', '\'\'', '\'\'', '\'Leas\'', '\'m', '\'So', 0x2772c3a9, '\'1234567/A/M/00', '\'123 456 789 ', NULL, '0000-00-00', 0, '\'27 Avenue Maritime, 44300 Nantes\'', '\'440', '\'N', '\'1234567/A/M/00', 0x274c6561, 0x2747726f, '\'\'', '\'véhicules, équipements\'', 0, 0, '\'Jean Dupont\'', '\'1', '\'1234567890123\'', '\'12 rue des Tilleuls, 75011 Paris, France\'', '\'Fr', 0, '\'Importation et vente de voitures neuves de marque', 0, 0, 0, 0, 0, 0, 0, 0, 0x276d656e, 0, '\'Agence commerciale\'', 0, '\'FR76 1234 5678 9012', '\'Jeanne DUPONT\'', '\'1234567', '\'Pierre DURAND\'', '\'9876543', '\'Bien immobilier situé au 12 rue des Roses, 75018 ', 0, '', 0, NULL),
+(7, 0, '0000-00-00', 0, '\'Leasing Solutions Finances\'', '\'\'', '\'\'', '\'Leas\'', '\'m', '\'So', 0x2772c3a9, '\'1234567/A/M/00', '\'123 456 789 ', NULL, '0000-00-00', 0, '\'27 Avenue Maritime, 44300 Nantes\'', '\'440', '\'N', '\'1234567/A/M/00', 0x274c6561, 0x2747726f, '\'\'', '\'véhicules, équipements\'', 0, 0, '\'Jean Dupont\'', '\'1', '\'1234567890123\'', '\'12 rue des Tilleuls, 75011 Paris, France\'', '\'Fr', 0, '\'Importation et vente de voitures neuves de marque', 0, 0, 0, 0, 0, 0, 0, 0, 0x276d656e, 0, '\'Agence commerciale\'', 0, '\'FR76 1234 5678 9012', '\'Jeanne DUPONT\'', '\'1234567', '\'Pierre DURAND\'', '\'9876543', '\'Bien immobilier situé au 12 rue des Roses, 75018 ', 0, '', 2, 'Approved'),
 (8, 0, '0000-00-00', 0, '\'\'', '\'\'', '\'\'', '\'bta\'', '\'m', '\'So', 0x2772c3a9, '\'1234567/A/M/00', '\'123 456 789 ', NULL, '0000-00-00', 0, '\'27 Avenue Maritime, 44300 Nantes\'', '\'440', '\'N', '\'1234567/A/M/00', 0x276c6561, 0x276c6561, '\'\'', '\'\'', 0, 0, '\'nour\'', '\'\'', '\'\'', '\'\'', '\'\'', 0, '\'b\'', 0, 0, 0, 0, 0, 0, 0, 0, 0x276d656e, 0, '\'Agence commerciale\'', 0, '\'FR76 1234 5678 9012', '\'Jeanne DUPONT\'', '\'1234567', '\'Pierre DURAND\'', '\'\'', '\'Bien immobilier situé au 12 rue des Roses, 75018 ', 0, '', 2, NULL),
 (9, 0, '0000-00-00', 0, '\'\'', '\'\'', '\'\'', '\'\'', '\'\'', '\'\'', 0x27270000, '\'\'', '\'\'', NULL, '0000-00-00', 0, '\'\'', '\'\'', '\'\'', '\'\'', 0x27270000, 0x27270000, '\'\'', '\'\'', 0, 0, '\'\'', '\'\'', '\'\'', '\'\'', '\'\'', 0, '\'\'', 0, 0, 0, 0, 0, 0, 0, 0, 0x27270000, 0, '\'\'', 0, '\'\'', '\'\'', '\'\'', '\'\'', '\'\'', '\'\'', 0, '\'\'', 2, NULL),
-(10, 0, '0000-00-00', 0, '\'\'', '\'\'', '\'\'', '\'\'', '\'\'', '\'\'', 0x27270000, '\'\'', '\'\'', NULL, '0000-00-00', 0, '\'\'', '\'\'', '\'\'', '\'\'', 0x27270000, 0x27270000, '\'\'', '\'\'', 0, 0, '\'\'', '\'\'', '\'\'', '\'\'', '\'\'', 0, '\'\'', 0, 0, 0, 0, 0, 0, 0, 0, 0x27270000, 0, '\'\'', 0, '\'\'', '\'\'', '\'\'', '\'\'', '\'\'', '\'\'', 0, '', 0, NULL),
+(10, 0, '0000-00-00', 0, '\'\'', '\'\'', '\'\'', '\'\'', '\'\'', '\'\'', 0x27270000, '\'\'', '\'\'', NULL, '0000-00-00', 0, '\'\'', '\'\'', '\'\'', '\'\'', 0x27270000, 0x27270000, '\'\'', '\'\'', 0, 0, '\'\'', '\'\'', '\'\'', '\'\'', '\'\'', 0, '\'\'', 0, 0, 0, 0, 0, 0, 0, 0, 0x27270000, 0, '\'\'', 0, '\'\'', '\'\'', '\'\'', '\'\'', '\'\'', '\'\'', 0, '', 0, 'Declined'),
 (11, 0, '0000-00-00', 0, '\'\'', '\'\'', '\'\'', '\'\'', '\'\'', '\'\'', 0x27270000, '\'\'', '\'\'', NULL, '0000-00-00', 0, '\'\'', '\'\'', '\'\'', '\'\'', 0x27270000, 0x27270000, '\'\'', '\'\'', 0, 0, '\'\'', '\'\'', '\'\'', '\'\'', '\'\'', 0, '\'\'', 0, 0, 0, 0, 0, 0, 0, 0, 0x27270000, 0, '\'\'', 0, '\'\'', '\'\'', '\'\'', '\'\'', '\'\'', '\'\'', 0, '\'\'', 0, NULL),
-(12, 0, '0000-00-00', 0, '', '', '', '', '', '', 0x00000000, '', '', NULL, '0000-00-00', 0, '', '', '', '', 0x00000000, 0x00000000, '', '', 0, 0, '', '', '', '', '', 0, '', 0, 0, 0, 0, 0, 0, 0, 0, 0x00000000, 0, '', 0, '', '', '', '', '', '', 0, '', 1, NULL),
+(12, 0, '0000-00-00', 0, '', '', '', '', '', '', 0x00000000, '', '', NULL, '0000-00-00', 0, '', '', '', '', 0x00000000, 0x00000000, '', '', 0, 0, '', '', '', '', '', 0, '', 0, 0, 0, 0, 0, 0, 0, 0, 0x00000000, 0, '', 0, '', '', '', '', '', '', 0, '', 2, 'Approved'),
 (40, 0, '0000-00-00', 0, '', '', '', '', '', '', 0x00000000, '', '', NULL, '0000-00-00', 0, '', '', '', '', 0x00000000, 0x00000000, '', '', 0, 0, '', '', '', '', '', 0, '', 0, 0, 0, 0, 0, 0, 0, 0, 0x69796573, 0, '', 0, '', '', '', '', '', '', 0, '', 2, NULL),
-(41, 0, '0000-00-00', 0, '', '', '', '', '', '', 0x00000000, '', '', NULL, '0000-00-00', 0, '', '', '', '', 0x00000000, 0x00000000, '', '', 0, 0, '', '', '', '', '', 0, '', 0, 0, 0, 0, 0, 0, 0, 0, 0x00000000, 0, '', 0, '', '', '', '', '', '', 0, '', 2, NULL),
-(42, 0, '0000-00-00', 0, '', '', '', '', '', '', 0x00000000, '', '', NULL, '0000-00-00', 0, '', '', '', '', 0x00000000, 0x00000000, '', '', 0, 0, '', '', '', '', '', 0, '', 0, 0, 0, 0, 0, 0, 0, 0, 0x00000000, 0, '', 0, '', '', '', '', '', '', 0, '', 0, NULL),
-(73, 0, '0000-00-00', 0, '', '', '', '', '', '', 0x00000000, '', '', NULL, '0000-00-00', 0, '', '', '', '', 0x00000000, 0x00000000, '', '', 0, 0, '', '', '', '', '', 0, '', 0, 0, 0, 0, 0, 0, 0, 0, 0x00000000, 0, '', 0, '', '', '', '', '', '', 0, '', 1, 'not approved'),
-(74, 0, '0000-00-00', 0, '', '', '', '', '', '', 0x00000000, '', '', NULL, '0000-00-00', 0, '', '', '', '', 0x00000000, 0x00000000, '', '', 0, 0, '', '', '', '', '', 0, '', 0, 0, 0, 0, 0, 0, 0, 0, 0x00000000, 0, '', 0, '', '', '', '', '', '', 0, '', 1, 'not approved'),
-(75, 0, '0000-00-00', 0, '9+74', '', '', '', '', '', 0x00000000, '', '', NULL, '0000-00-00', 0, '', '', '', '', 0x00000000, 0x00000000, '', '', 0, 0, '', '', '', '', '', 0, '', 0, 0, 0, 0, 0, 0, 0, 0, 0x00000000, 0, '', 0, '', '', '', '', '', '', 0, '', 0, NULL);
+(41, 0, '0000-00-00', 0, '', '', '', '', '', '', 0x00000000, '', '', NULL, '0000-00-00', 0, '', '', '', '', 0x00000000, 0x00000000, '', '', 0, 0, '', '', '', '', '', 0, '', 0, 0, 0, 0, 0, 0, 0, 0, 0x00000000, 0, '', 0, '', '', '', '', '', '', 0, '', 0, 'Declined'),
+(42, 0, '0000-00-00', 0, '', '', '', '', '', '', 0x00000000, '', '', NULL, '0000-00-00', 0, '', '', '', '', 0x00000000, 0x00000000, '', '', 0, 0, '', '', '', '', '', 0, '', 0, 0, 0, 0, 0, 0, 0, 0, 0x00000000, 0, '', 0, '', '', '', '', '', '', 0, '', 0, 'Declined'),
+(77, 0, '0000-00-00', 0, 'ezfez', '', '', '', '', '', 0x00000000, '', '', NULL, '0000-00-00', 0, '', '', '', '', 0x00000000, 0x00000000, '', '', 0, 0, '', '', '', '', '', 0, '', 0, 0, 0, 0, 0, 0, 0, 0, 0x00000000, 0, '', 0, '', '', '', '', '', '', 0, '', 1, 'not approved'),
+(78, 0, '0000-00-00', 0, 'ezfez', '', '', '', '', '', 0x00000000, '', '', NULL, '0000-00-00', 0, '', '', '', '', 0x00000000, 0x00000000, '', '', 0, 0, '', '', '', '', '', 0, '', 0, 0, 0, 0, 0, 0, 0, 0, 0x00000000, 0, '', 0, '', '', '', '', '', '', 0, '', 1, 'not approved'),
+(79, 0, '0000-00-00', 0, 'ezfez', '', '', '', '', '', 0x00000000, '', '', NULL, '0000-00-00', 0, '', '', '', '', 0x00000000, 0x00000000, '', '', 0, 0, '', '', '', '', '', 0, '', 0, 0, 0, 0, 0, 0, 0, 0, 0x00000000, 0, '', 0, '', '', '', '', '', '', 0, '', 2, 'Approved'),
+(80, 7, '0000-00-00', 0, '', '', '', '', '', '', 0x00000000, '', '', NULL, '0000-00-00', 0, '', '', '', '', 0x00000000, 0x00000000, '', '', 0, 0, '', '', '', '', '', 0, '', 0, 0, 0, 0, 0, 0, 0, 0, 0x00000000, 0, '', 0, '', '', '', '', '', '', 0, '', 2, 'Approved'),
+(81, 7, '0000-00-00', 0, '', '', '', '', '', '', 0x00000000, '', '', NULL, '0000-00-00', 0, '', '', '', '', 0x00000000, 0x00000000, '', '', 0, 0, '', '', '', '', '', 0, '', 0, 0, 0, 0, 0, 0, 0, 0, 0x00000000, 0, '', 0, '', '', '', '', '', '', 0, '', 0, 'Declined'),
+(83, 7, '0000-00-00', 0, '', '', '', '', '', '', 0x00000000, '', '', NULL, '0000-00-00', 0, '', '', '', '', 0x00000000, 0x00000000, '', '', 0, 0, '', '', '', '', '', 0, '', 0, 0, 0, 0, 0, 0, 0, 0, 0x00000000, 0, '', 0, '', '', '', '', '', '', 0, '', 2, 'Approved'),
+(84, 7, '0000-00-00', 0, '', '', '', '', '', '', 0x00000000, '', '', NULL, '0000-00-00', 0, '', '', '', '', 0x00000000, 0x00000000, '', '', 0, 0, '', '', '', '', '', 0, '', 0, 0, 0, 0, 0, 0, 0, 0, 0x00000000, 0, '', 0, '', '', '', '', '', '', 0, '', 0, 'Declined'),
+(85, 7, '0000-00-00', 0, '', '', '', '', '', '', 0x00000000, '', '', NULL, '0000-00-00', 0, '', '', '', '', 0x00000000, 0x00000000, '', '', 0, 0, '', '', '', '', '', 0, '', 0, 0, 0, 0, 0, 0, 0, 0, 0x00000000, 0, '', 0, '', '', '', '', '', '', 0, '', 0, 'Declined'),
+(86, 7, '0000-00-00', 0, '', '', '', '', '', '', 0x00000000, '', '', NULL, '0000-00-00', 0, '', '', '', '', 0x00000000, 0x00000000, '', '', 0, 0, '', '', '', '', '', 0, '', 0, 0, 0, 0, 0, 0, 0, 0, 0x00000000, 0, '', 0, '', '', '', '', '', '', 0, '', 1, 'not approved');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `register`
+-- Structure de la table `register`
 --
 
 CREATE TABLE `register` (
@@ -121,7 +148,7 @@ CREATE TABLE `register` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
--- Dumping data for table `register`
+-- Déchargement des données de la table `register`
 --
 
 INSERT INTO `register` (`username`, `email`, `password`, `role`, `token`, `id`, `activite`, `secteur`) VALUES
@@ -136,7 +163,7 @@ INSERT INTO `register` (`username`, `email`, `password`, `role`, `token`, `id`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `state_types`
+-- Structure de la table `state_types`
 --
 
 CREATE TABLE `state_types` (
@@ -145,7 +172,7 @@ CREATE TABLE `state_types` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
--- Dumping data for table `state_types`
+-- Déchargement des données de la table `state_types`
 --
 
 INSERT INTO `state_types` (`state_id`, `state_description`) VALUES
@@ -154,39 +181,51 @@ INSERT INTO `state_types` (`state_id`, `state_description`) VALUES
 (2, 'approved');
 
 --
--- Indexes for dumped tables
+-- Index pour les tables déchargées
 --
 
 --
--- Indexes for table `demandes_fin`
+-- Index pour la table `contracts`
+--
+ALTER TABLE `contracts`
+  ADD PRIMARY KEY (`contract_id`);
+
+--
+-- Index pour la table `demandes_fin`
 --
 ALTER TABLE `demandes_fin`
   ADD PRIMARY KEY (`IDDemandes_Fin`);
 
 --
--- Indexes for table `register`
+-- Index pour la table `register`
 --
 ALTER TABLE `register`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `state_types`
+-- Index pour la table `state_types`
 --
 ALTER TABLE `state_types`
   ADD PRIMARY KEY (`state_id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT pour les tables déchargées
 --
 
 --
--- AUTO_INCREMENT for table `demandes_fin`
+-- AUTO_INCREMENT pour la table `contracts`
+--
+ALTER TABLE `contracts`
+  MODIFY `contract_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `demandes_fin`
 --
 ALTER TABLE `demandes_fin`
-  MODIFY `IDDemandes_Fin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `IDDemandes_Fin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
 
 --
--- AUTO_INCREMENT for table `register`
+-- AUTO_INCREMENT pour la table `register`
 --
 ALTER TABLE `register`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
