@@ -13,7 +13,6 @@ function GestionOpportunites() {
   useEffect(() => {
     axios.get('http://localhost:3001/demandesfin')
       .then(response => {
-        console.log('API response:', response.data); // Log de la réponse
         if (Array.isArray(response.data.data)) {
           setData(response.data.data);
         } else {
@@ -24,7 +23,6 @@ function GestionOpportunites() {
         console.error('Fetch error:', err);
       });
   }, []);
-  
 
   const deleteRow = (id) => {
     axios.delete(`http://localhost:3001/demandesfin/${id}`)
@@ -43,12 +41,8 @@ function GestionOpportunites() {
       .then(response => {
         const updatedRow = response.data.data[0];  // Assuming the API returns the updated row in this structure
         const newState = status === 'Approved' ? 2 : 0; // 2 for approved, 0 for not approved
-        const updatedDemand = data.find(item => item.IDDemandes_Fin === id);
-        if (updatedDemand) {
-          updatedDemand.state = newState;
-          updatedDemand.approvalStatus = status;
-          setData([...data]);
-        }
+        const updatedDemand = { ...updatedRow, state: newState };
+        setData(data.map(item => (item.IDDemandes_Fin === id ? updatedDemand : item)));
       })
       .catch(err => {
         console.log(err);
@@ -57,12 +51,9 @@ function GestionOpportunites() {
 
   const viewRow = (id) => {
     const row = data.find(item => item.IDDemandes_Fin === id);
-    if (row) {
-      setSelectedRow(row);
-      setShowModal(true);
-    }
+    setSelectedRow(row);
+    setShowModal(true);
   };
-  
 
   const sanitizeValue = (value) => {
     return value && typeof value === 'object' ? JSON.stringify(value) : value;
@@ -144,45 +135,39 @@ function GestionOpportunites() {
               <td>{sanitizeValue(item.DF_Durée)}</td>
               <td>{sanitizeValue(item.DF_Taux)}</td>
               <td>{sanitizeValue(item.DF_TEG)}</td>
-              <td>{sanitizeValue(item.approvalStatus)}</td>
+              <td>{sanitizeValue(item.statuts)}</td>
               <td>{sanitizeValue(item.state)}</td>
               <td>
+                <button onClick={() => viewRow(item.IDDemandes_Fin)}>Lire</button>
+                <button onClick={() => deleteRow(item.IDDemandes_Fin)}>Supprimer</button>
                 <button onClick={() => updateStatus(item.IDDemandes_Fin, 'Approved')}>Approve</button>
                 <button onClick={() => updateStatus(item.IDDemandes_Fin, 'Declined')}>Decline</button>
-                <button onClick={() => viewRow(item.IDDemandes_Fin)}>View</button>
-                <button onClick={() => deleteRow(item.IDDemandes_Fin)}>Delete</button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-
-      <CSVLink data={csvData} filename={"demandesfin.csv"}>
-        Export to CSV
-      </CSVLink>
-
-      {showModal && selectedRow && (
+      {showModal && (
         <div className="modal">
           <div className="modal-content">
-            <span className="close" onClick={() => setShowModal(false)}>&times;</span>
-            <h2>Demand Details</h2>
-            <p><strong>ID:</strong> {selectedRow.IDDemandes_Fin}</p>
-            <p><strong>User:</strong> {selectedRow.UserID}</p>
-            <p><strong>Date:</strong> {selectedRow.DF_Date}</p>
-            {/* Add more details as needed */}
+            <h2>Selected Row Details</h2>
+            {Object.keys(selectedRow).map((key) => (
+              <p key={key}>{key}: {typeof selectedRow[key] === 'object' ? JSON.stringify(selectedRow[key]) : selectedRow[key]}</p>
+            ))}
+            <button onClick={() => setShowModal(false)}>Close</button>
           </div>
         </div>
       )}
-
       {showModal1 && (
         <div className="modal">
           <div className="modal-content">
-            <span className="close" onClick={() => setShowModal1(false)}>&times;</span>
-            <h2>Row Deleted</h2>
+            <h2>Row Deleted!</h2>
             <p>Row with ID {deletedRowId} has been deleted.</p>
+            <button onClick={() => setShowModal1(false)}>Close</button>
           </div>
         </div>
       )}
+      <CSVLink className='button-24' data={csvData} filename="demandes_fin.csv">Download CSV</CSVLink>
     </div>
   );
 }
