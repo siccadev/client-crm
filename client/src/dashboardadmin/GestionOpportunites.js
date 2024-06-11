@@ -37,7 +37,7 @@ function GestionOpportunites() {
   };
 
   const updateStatus = (id, status) => {
-    axios.put(`http://localhost:3001/demandesfin/${id}`, { status: status })  // Corrected here
+    axios.put(`http://localhost:3001/demandesfin/${id}`, { status: status })
       .then(response => {
         const updatedRow = response.data.data[0];  // Assuming the API returns the updated row in this structure
         const newState = status === 'Approved' ? 2 : 0; // 2 for approved, 0 for not approved
@@ -154,7 +154,7 @@ function GestionOpportunites() {
         </tbody>
       </table>
 
-      <CSVLink data={csvData} filename={"demandesfin.csv"}>
+      <CSVLink className='button-24' data={csvData} filename={"demandesfin.csv"}>
         Export to CSV
       </CSVLink>
 
@@ -164,9 +164,42 @@ function GestionOpportunites() {
             <span className="close" onClick={() => setShowModal(false)}>&times;</span>
             <h2>Demand Details</h2>
             <p><strong>ID:</strong> {selectedRow.IDDemandes_Fin}</p>
-            <p><strong>User:</strong> {selectedRow.UserID}</p>
+            <p><strong>User ID:</strong> {selectedRow.UserID}</p>
             <p><strong>Date:</strong> {selectedRow.DF_Date}</p>
-            {/* Add more details as needed */}
+            <p><strong>Client Type:</strong> {selectedRow.Cl_Type}</p>
+            <p><strong>Client Name:</strong> {selectedRow.Cl_Nom}</p>
+            <p><strong>Client First Name:</strong> {selectedRow.Cl_Prenom}</p>
+            <p><strong>Client Sigle:</strong> {selectedRow.Cl_Sigle}</p>
+            <p><strong>KFJUR:</strong> {selectedRow.KFJUR}</p>
+            <p><strong>Client Company Name:</strong> {selectedRow.Cl_RaiSoc}</p>
+            <p><strong>Client Tax Number:</strong> {selectedRow.Cl_RC_UI}</p>
+            <p><strong>Client Fiscal Number:</strong> {selectedRow.Cl_Mat_Fisc}</p>
+            <p><strong>Client Creation Date:</strong> {selectedRow.Cl_Date_Creat}</p>
+            <p><strong>Client Capital:</strong> {selectedRow.Cl_Capital}</p>
+            <p><strong>Client Address:</strong> {selectedRow.Cl_Adresse}</p>
+            <p><strong>Client ID:</strong> {selectedRow.Cl_NumIdPM}</p>
+            <p><strong>Project:</strong> {selectedRow.DF_Projet}</p>
+            <p><strong>Amount (HT):</strong> {selectedRow.DF_Montant_HT}</p>
+            <p><strong>TVA:</strong> {selectedRow.DF_TVA}</p>
+            <p><strong>Amount (TTC):</strong> {selectedRow.DF_Montant_TTC}</p>
+            <p><strong>Self-Financed Amount (TTC):</strong> {selectedRow.DF_Auto_FinTTC}</p>
+            <p><strong>Duration:</strong> {selectedRow.DF_Durée}</p>
+            <p><strong>Rate:</strong> {selectedRow.DF_Taux}</p>
+            <p><strong>TEG:</strong> {selectedRow.DF_TEG}</p>
+            <p><strong>Period:</strong> {sanitizeValue(selectedRow.DF_Periode)}</p>
+            <p><strong>Branch ID:</strong> {selectedRow.IDSuccursales}</p>
+            <p><strong>Origin:</strong> {selectedRow.DF_Provenance}</p>
+            <p><strong>File Manager:</strong> {selectedRow.DF_Charge_Dossier}</p>
+            <p><strong>RIB:</strong> {selectedRow.DF_RIB}</p>
+            <p><strong>Caution CIN:</strong> {selectedRow.DF_Caution_CIN}</p>
+            <p><strong>Hypothecated NP:</strong> {selectedRow.DF_Hyp_NP}</p>
+            <p><strong>Hypothecated CIN:</strong> {selectedRow.DF_Hyp_CIN}</p>
+            <p><strong>Hypothecated Object:</strong> {selectedRow.DF_Hyp_Objet}</p>
+            <p><strong>Hypothecated Value:</strong> {selectedRow.DF_Hyp_Val}</p>
+            <p><strong>Status:</strong> {selectedRow.status}</p>
+            <p><strong>State:</strong> {selectedRow.state}</p>
+            <p><strong>Approval Status:</strong> {selectedRow.approvalStatus}</p>
+            <button onClick={() => setShowModal(false)}>Close</button>
           </div>
         </div>
       )}
@@ -177,6 +210,7 @@ function GestionOpportunites() {
             <span className="close" onClick={() => setShowModal1(false)}>&times;</span>
             <h2>Row Deleted</h2>
             <p>Row with ID {deletedRowId} has been deleted.</p>
+            <button className='button-24' onClick={() => setShowModal1(false)}>Close</button>
           </div>
         </div>
       )}

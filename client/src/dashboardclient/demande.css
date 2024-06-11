@@ -47,11 +47,11 @@ button:disabled:hover {
 /* Form */
 form {
   margin: 0 auto;
-  max-width: 900%; /* Increase max-width to 800px or any other value you prefer */
+ width: 600px;
   padding: 10px;
-  background-color: #ffffff; /* White */
+ 
   border-radius: 5px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+ 
 }
 
 /* Inputs */

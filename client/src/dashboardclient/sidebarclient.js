@@ -35,13 +35,13 @@ const SidebarC = () => {
           </NavLink>
         </li>
         <li className="nav-item">
-          <NavLink to="/update-profile" activeClassName="active" onClick={() => onSelectModule('Profile')} className="nav-link">
+          <NavLink to="/profile" activeClassName="active" onClick={() => onSelectModule('Profile')} className="nav-link">
             <i className="bi bi-person-fill"></i>
             <span>Profile</span>
           </NavLink>
         </li>
         <li className="nav-item">
-          <NavLink to="/logout" activeClassName="active" onClick={() => onSelectModule('Déconnexion')} className="nav-link">
+          <NavLink to="/Home" activeClassName="active" onClick={() => onSelectModule('Home')} className="nav-link">
             <i className="bi bi-box-arrow-right"></i>
             <span>Déconnexion</span>
           </NavLink>
