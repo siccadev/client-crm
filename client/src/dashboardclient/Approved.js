@@ -5,6 +5,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import { userState } from '../Recoil/Rstore';
 import { demandState } from '../Recoil/SRstore';
+import jsPDF from 'jspdf';
 
 function Approved() {
   const [data, setData] = useState([]);
@@ -32,10 +33,10 @@ function Approved() {
     setSelectedRow(row);
     setShowModal(true);
 
-    axios.get(`http://localhost:3001/contracts/${id}`) // Fetch contract data for the selected row
+    axios.get(`http://localhost:3001/contracts/${id}`)
       .then(response => {
         if (response.data && response.data.data) {
-          setContactData(response.data.data); // Set contract data
+          setContactData(response.data.data);
         } else {
           throw new Error('Invalid contract data');
         }
@@ -94,6 +95,28 @@ function Approved() {
   const handleViewClick = (id) => {
     navigate(`/Contract`);
     Setdemande(id);
+  };
+
+  const handleDownload = () => {
+    if (contactData) {
+      const doc = new jsPDF();
+
+      doc.text(20, 20, 'Contract Details');
+      doc.text(20, 30, `Contract ID: ${contactData.contract_id}`);
+      doc.text(20, 40, `Contract Number: ${contactData.contract_number}`);
+      doc.text(20, 50, `Contract Type: ${contactData.contract_type}`);
+      doc.text(20, 60, `Start Date: ${contactData.start_date}`);
+      doc.text(20, 70, `Financing Mode: ${contactData.financing_mode}`);
+      doc.text(20, 80, `Monthly Amount: ${contactData.monthly_amount}`);
+      doc.text(20, 90, `Equipment Type: ${contactData.equipment_type}`);
+      doc.text(20, 100, `Owner First Name: ${contactData.owner_first_name}`);
+      doc.text(20, 110, `Owner Last Name: ${contactData.owner_last_name}`);
+      doc.text(20, 120, `Electronic Signature: ${contactData.electronic_signature}`);
+
+      doc.save('contract.pdf');
+    } else {
+      console.error('No contract data available for download');
+    }
   };
 
   return (
@@ -174,31 +197,34 @@ function Approved() {
             {contactData && (
               <div>
                 <p><strong>Contract ID:</strong> {contactData.contract_id}</p>
-                <p><strong>Contract Name:</strong> {contactData.contractName}</p>
-                <p><strong>Contract Value:</strong> {contactData.contractValue}</p>
+                <p><strong>Contract Number:</strong> {contactData.contract_number}</p>
+                <p><strong>Contract Type:</strong> {contactData.contract_type}</p>
+                <p><strong>Start Date:</strong> {contactData.start_date}</p>
+                <p><strong>Financing Mode:</strong> {contactData.financing_mode}</p>
+                <p><strong>Monthly Amount:</strong> {contactData.monthly_amount}</p>
+                <p><strong>Equipment Type:</strong> {contactData.equipment_type}</p>
+                <p><strong>Owner First Name:</strong> {contactData.owner_first_name}</p>
+                <p><strong>Owner Last Name:</strong> {contactData.owner_last_name}</p>
+                <p><strong>Electronic Signature:</strong> {contactData.electronic_signature}</p>
               </div>
             )}
 
-            {/* Delete button */}
+            <button onClick={handleDownload}>Download</button>
             <button onClick={() => deleteRow(selectedRow.IDDemandes_Fin)}>Delete</button>
           </div>
         </div>
-      )
-      }
+      )}
 
-      {/* Deletion Success Modal */}
-      {
-        showModal1 && (
-          <div className="modal">
-            <div className="modal-content">
-              <span className="close" onClick={() => setShowModal1(false)}>&times;</span>
-              <h2>Deletion Successful</h2>
-              <p>The row with ID {deletedRowId} has been successfully deleted.</p>
-            </div>
+      {showModal1 && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={() => setShowModal1(false)}>&times;</span>
+            <h2>Deletion Successful</h2>
+            <p>The row with ID {deletedRowId} has been successfully deleted.</p>
           </div>
-        )
-      }
-    </div >
+        </div>
+      )}
+    </div>
   );
 }
 
