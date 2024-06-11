@@ -68,6 +68,7 @@ function Approved() {
     return value;
   };
 
+
   const csvData = data.map(item => ({
     IDDemandes_Fin: item.IDDemandes_Fin,
     UserID: item.UserID,
@@ -186,7 +187,6 @@ function Approved() {
       )
       }
 
-      {/* Deletion Success Modal */}
       {
         showModal1 && (
           <div className="modal">

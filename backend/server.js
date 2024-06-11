@@ -332,6 +332,7 @@ app.get('/contart', (req, res) => {
 });
 
 
+
 app.get('/contracts/:id', (req, res) => {
   const { id } = req.params;
   const query = 'SELECT * FROM contracts WHERE contract_id = ?';
@@ -349,7 +350,6 @@ app.get('/contracts/:id', (req, res) => {
     res.status(200).json({ message: 'Contract fetched successfully', data: results[0] });
   });
 });
-
 
 
 
