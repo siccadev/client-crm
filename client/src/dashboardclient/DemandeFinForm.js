@@ -15,11 +15,11 @@ const DemandeFinForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const user = useRecoilValue(userState);
-
-  console.log("Received userData:", user.id);
+  const userId = user ? user.id : '';
+  
 
   const [demandeFin, setDemandeFin] = useState({
-    UserID: user.id,
+    UserID: userId,
     DF_Date: '',
     Cl_RaiSoc: '',
     Cl_Type: '',

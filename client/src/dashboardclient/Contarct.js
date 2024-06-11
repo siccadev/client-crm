@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
-
+import { demandState } from '../Recoil/SRstore';
+import { useRecoilValue } from 'recoil';
 const ContractForm = () => {
+
+  const demande = useRecoilValue(demandState);
+
+
   const [formData, setFormData] = useState({
+    contract_id: demande,
     contract_number: '',
     contract_type: '',
     start_date: '',
@@ -50,11 +56,11 @@ const ContractForm = () => {
     }
   };
 
-  const handleCloseModal = () => {
-    setShowModal(false);
-    // Reload the page
-    window.location.reload();
-  };
+  // const handleCloseModal = () => {
+  //   setShowModal(false);
+  //   // Reload the page
+  //   window.location.reload();
+  // };
 
   return (
     <div>
@@ -69,16 +75,14 @@ const ContractForm = () => {
         <input type="text" name="owner_first_name" value={formData.owner_first_name} onChange={handleInputChange} placeholder="Owner First Name" />
         <input type="text" name="owner_last_name" value={formData.owner_last_name} onChange={handleInputChange} placeholder="Owner Last Name" />
         <input type="text" name="electronic_signature" value={formData.electronic_signature} onChange={handleInputChange} placeholder="Electronic Signature" />
-        
+
         <button type="submit">Submit</button>
       </form>
 
-      {/* Modal for contract sign-in */}
-      <Modal isOpen={showModal} onRequestClose={handleCloseModal}>
+      {/* <Modal isOpen={showModal} onRequestClose={handleCloseModal}>
         <h2>Contract Signed!</h2>
-        {/* Add any content you want to show in the modal */}
         <button onClick={handleCloseModal}>Close</button>
-      </Modal>
+      </Modal> */}
     </div>
   );
 };

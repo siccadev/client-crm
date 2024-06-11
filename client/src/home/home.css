@@ -28,6 +28,7 @@ header {
   color: white;
   padding: 10px 0;
   text-align: center;
+  
 }
 
 .intro-section {
@@ -41,9 +42,8 @@ header {
   max-width: 1100px;
   margin: 0 auto;
   padding: 0 20px;
+
   
-
-
 }
 
 .main-title {
@@ -51,31 +51,27 @@ header {
   text-align: 5px left;
   font-size: 4.2rem;
   line-height: 1.05;
-  margin-bottom: 2rem;
   font-weight: bold;
   margin: 20px;
   font-variant: small-caps;
-  
-
-
+  margin-top: -4%;
 
 }
 
 .description {
   color: black ;
   font-size: 20px;
-  margin-bottom: 30px;
   text-align: left;
   font-weight: bold;
   font-variant: small-caps;
-  margin: 10px;
-  
+  margin-top: 120px;
 }
 
 
 .buttons {
   display: flex;
   justify-content: left;
+  
 }
 
 .login-button,
@@ -119,19 +115,22 @@ header {
 
 .crm {
   display: flex;
-  align-items: center;
   justify-content: flex-end;
   position: relative;
+  margin-top: 2%;
   
 }
 
 .home-logo {
   position: absolute;
-  top: -280px;
-  width: 50rem;
+  top:-220px;
+  width: 60rem;
   height: 25rem;
   margin: 5px;
-  padding: 20px;
+  border-radius: 2%;
+  box-shadow: 0 2px 10px rgb(0, 0, 0);
+  box-shadow: 0 2px 10px rgb(0, 0, 0);
+
 
 }
 .middle {
@@ -144,13 +143,7 @@ header {
   -ms-transform: translate(-50%, -50%)
 }
 
-.crm:hover .home-logo {
-  opacity: 0.3;
-}
 
-.crm:hover .middle {
-  opacity: 1;
-}
 
 /*about-us*/
 
@@ -197,10 +190,10 @@ header {
 
 /*why*/
 .why-us-section {
-  background-color: #f7f7f7; /* Light grey background for contrast */
   padding: 2rem; /* Add padding for spacing */
   border-radius: 10px; /* Rounded corners */
   margin: 2rem 0; /* Margin to separate from other sections */
+  margin-left: 30%;
 }
 
 .why-us-section .title {
@@ -238,3 +231,81 @@ header {
   text-align: center; /* Center align the paragraph */
 }
 
+.contact-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.contact-section {
+  max-width: 600px;
+  width: 100%;
+  background-color: rgba(255, 239, 213, 0.591);
+  border-radius: 18px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.548);
+  padding: 20px;
+  margin-left: 60%;
+  
+
+}
+.us{
+  height: 350px;
+  width: 700px;
+  margin-top: -29%;
+  border-radius: 18px;
+  margin-left: 2%;
+  box-shadow: 0 2px 10px rgb(0, 0, 0);
+
+
+}
+.sectors-container{
+  max-width: 1724px;
+  width: 100%;
+  background-color: rgba(255, 239, 213, 0.591);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  height: 310px;
+
+}
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #f00;
+  display: flex;
+  align-items: center;
+}
+
+
+
+.contact-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.contact-item {
+  margin-bottom: 15px;
+  
+}
+
+.contact-label {
+  font-size: 16px;
+  font-weight: 500;
+  color: #000000;
+  margin: 0;
+}
+
+.contact-value {
+  font-size: 16px;
+  color: #007bff;
+  margin: 5px 0 0;
+  text-decoration: none;
+}
+
+.contact-value:hover {
+  text-decoration: underline;
+}
