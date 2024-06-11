@@ -290,20 +290,6 @@ app.post('/reset-password', (req, res) => {
 });
 
 
-app.delete('/contracts/:id', (req, res) => {
-  const id = req.params.id;
-  const sql = 'DELETE FROM contracts WHERE contract_id = ?';
-  connection.query(sql, id, (err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ message: 'Error deleting data' });
-    }
-    if (results.affectedRows === 0) {
-      return res.status(404).json({ message: 'Contract not found' });
-    }
-    res.status(200).json({ message: 'Data deleted successfully', data: results });
-  });
-});
 
 app.post('/contart', (req, res) => {
   const contrat = req.body;
@@ -332,7 +318,6 @@ app.get('/contart', (req, res) => {
 });
 
 
-
 app.get('/contracts/:id', (req, res) => {
   const { id } = req.params;
   const query = 'SELECT * FROM contracts WHERE contract_id = ?';
@@ -351,6 +336,21 @@ app.get('/contracts/:id', (req, res) => {
   });
 });
 
+
+app.delete('/contracts/:id', (req, res) => {
+  const id = req.params.id;
+  const sql = 'DELETE FROM contracts WHERE contract_id = ?';
+  connection.query(sql, id, (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: 'Error deleting data' });
+    }
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ message: 'Contract not found' });
+    }
+    res.status(200).json({ message: 'Data deleted successfully', data: results });
+  });
+});
 
 
 app.get('/demandesfin/user/:UserID', (req, res) => {
@@ -471,6 +471,31 @@ app.get('/demandesfin/user/:UserID/approved/count', (req, res) => {
     res.status(200).json({ message: 'Approved demandes count fetched successfully', data: results[0].count });
   });
 });
+
+// POST endpoint to save feedback in the database
+app.post('/feedback', (req, res) => {
+  const { username, feedback } = req.body;
+
+  // Check if username and feedback are provided
+  if (!username || !feedback) {
+    return res.status(400).json({ message: 'Veuillez fournir un nom d\'utilisateur et un commentaire.' });
+  }
+
+  // Insert feedback data into MySQL database
+  const query = 'INSERT INTO feedback (username, feedback) VALUES (?, ?)';
+  const values = [username, feedback];
+
+  connection.query(query, values, (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: 'Une erreur s\'est produite lors de la soumission du commentaire.' });
+    }
+
+    res.status(200).json({ message: 'Commentaire soumis avec succès.' });
+  });
+});
+
+
 
 
 app.listen(PORT, () => {

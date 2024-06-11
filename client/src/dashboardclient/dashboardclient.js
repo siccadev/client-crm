@@ -116,4 +116,3 @@ const DashboardClient = () => {
 };
 
 export default DashboardClient;
-
