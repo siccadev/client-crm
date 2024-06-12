@@ -372,7 +372,7 @@
     const query = 'SELECT COUNT(*) AS count FROM demandes_fin WHERE UserID = ? AND state = 0';
 
     connection.query(query, [UserID], (err, results) => {
-      if (err) {
+      if (err) {  
         console.error(err);
         return res.status(500).json({ message: 'Error counting not approved demandes' });
       }
