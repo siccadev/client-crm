@@ -69,6 +69,7 @@ function Approved() {
     return value;
   };
 
+
   const csvData = data.map(item => ({
     IDDemandes_Fin: item.IDDemandes_Fin,
     UserID: item.UserID,
@@ -218,7 +219,7 @@ function Approved() {
       {showModal1 && (
         <div className="modal">
           <div className="modal-content">
-            <span className="close" onClick={() => setShowModal1(false)}>&times;</span>
+            <span className="close" onClick={() => { setShowModal(false); setContactData(null); setShowModal1(false); }}>&times;</span>
             <h2>Deletion Successful</h2>
             <p>The row with ID {deletedRowId} has been successfully deleted.</p>
           </div>
