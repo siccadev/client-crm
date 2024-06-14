@@ -16,7 +16,7 @@ import Notapproved from './dashboardclient/Notapproved.js';
 import Processing from './dashboardclient/Processing.js'
 import Contract from './dashboardclient/Contarct.js'
 import { RecoilRoot } from 'recoil';
-
+import Client from './dashboardadmin/ClientStats.js'
 
 
 function App() {
@@ -43,6 +43,7 @@ function App() {
           <Route path="/Contract" element={<Contract />} />
 
           <Route path="/gestion-opportunites/:status" element={<GestionOpportunites />} />
+          <Route path="/Clientstats" element={<Client />} />
         </Routes>
       </Router>
     </RecoilRoot>

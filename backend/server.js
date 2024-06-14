@@ -109,7 +109,15 @@ app.get('/user/:username', (req, res) => {
   });
 });
 
-
+const paymentStats = [
+  { month: 'January', latePayments: 5 },
+  { month: 'February', latePayments: 3 },
+  { month: 'March', latePayments: 8 },
+  // Ajouter plus de données selon les besoins
+];
+app.get('/api/payment-stats', (req, res) => {
+  res.json(paymentStats);
+});
 
 app.post('/register', (req, res) => {
   const { username, email, password, role, activite, secteur } = req.body;

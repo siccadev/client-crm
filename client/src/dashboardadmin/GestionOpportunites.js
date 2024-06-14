@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { CSVLink } from 'react-csv';
 import axios from 'axios';
 import './GestionOpportunites.css';
-
+import { useNavigate } from 'react-router-dom';
 function GestionOpportunites() {
   const [data, setData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showModal1, setShowModal1] = useState(false);
   const [deletedRowId, setDeletedRowId] = useState(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     axios.get('http://localhost:3001/demandesfin')
       .then(response => {
@@ -148,6 +148,7 @@ function GestionOpportunites() {
                 <button onClick={() => updateStatus(item.IDDemandes_Fin, 'Declined')}>Decline</button>
                 <button onClick={() => viewRow(item.IDDemandes_Fin)}>View</button>
                 <button onClick={() => deleteRow(item.IDDemandes_Fin)}>Delete</button>
+                <button onClick={() => navigate("/Clientstats")}>stats</button>
               </td>
             </tr>
           ))}
