@@ -16,7 +16,7 @@ import Notapproved from './dashboardclient/Notapproved.js';
 import Processing from './dashboardclient/Processing.js'
 import Contract from './dashboardclient/Contarct.js'
 import { RecoilRoot } from 'recoil';
-
+import risk from "./dashboardadmin/GestionRisques.js"
 
 
 function App() {

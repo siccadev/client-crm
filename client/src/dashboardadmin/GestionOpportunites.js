@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { CSVLink } from 'react-csv';
 import axios from 'axios';
 import './GestionOpportunites.css';
+import GestionRisques from './GestionRisques';
 
 function GestionOpportunites() {
   const [data, setData] = useState([]);
@@ -9,6 +10,8 @@ function GestionOpportunites() {
   const [showModal, setShowModal] = useState(false);
   const [showModal1, setShowModal1] = useState(false);
   const [deletedRowId, setDeletedRowId] = useState(null);
+  const [viewRisks, setViewRisks] = useState(false);
+  const [riskData, setRiskData] = useState({});
 
   useEffect(() => {
     axios.get('http://localhost:3001/demandesfin')
@@ -55,6 +58,11 @@ function GestionOpportunites() {
     setShowModal(true);
   };
 
+  const evaluateRow = (row) => {
+    setRiskData(row);
+    setViewRisks(true);
+  };
+
   const sanitizeValue = (value) => {
     return value && typeof value === 'object' ? JSON.stringify(value) : value;
   };
@@ -82,6 +90,10 @@ function GestionOpportunites() {
     Statuts: item.statuts,
     State: item.state
   }));
+
+  if (viewRisks) {
+    return <GestionRisques riskData={riskData} setViewRisks={setViewRisks} />;
+  }
 
   return (
     <div>
@@ -142,6 +154,7 @@ function GestionOpportunites() {
                 <button onClick={() => deleteRow(item.IDDemandes_Fin)}>Supprimer</button>
                 <button onClick={() => updateStatus(item.IDDemandes_Fin, 'Approved')}>Approve</button>
                 <button onClick={() => updateStatus(item.IDDemandes_Fin, 'Declined')}>Decline</button>
+                <button onClick={() => evaluateRow(item)}>Évaluer</button>
               </td>
             </tr>
           ))}
