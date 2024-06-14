@@ -6,3 +6,8 @@ export const userState = atom({
 });
 
 
+// Define latePaymentState atom
+export const latePaymentState = atom({
+  key: 'latePaymentState',
+  default: false, // Default value is false
+});
