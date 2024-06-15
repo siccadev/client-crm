@@ -504,8 +504,51 @@ app.post('/feedback', (req, res) => {
 });
 
 
+app.get('/late-payments', (req, res) => {
+  
+  const query = `
+    SELECT c.*, p.payment_date, p.amount_paid
+    FROM contracts c
+    JOIN payments p ON c.contract_id = p.contract_id
+    WHERE p.payment_status = 'late'
+  `;
+
+  
+  connection.query(query, (err, results) => {
+    if (err) {
+      console.error('Error fetching late payments:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+      return;
+    }
+
+   
+    res.json(results);
+  });
+});
 
 
+// Define a route to handle POST requests for adding payments
+app.post('/add-payment', (req, res) => {
+  const { contract_id, payment_date, amount_paid, payment_status } = req.body;
+
+  // Create SQL query to insert payment data into the database
+  const query = `
+    INSERT INTO payments (contract_id, payment_date, amount_paid, payment_status)
+    VALUES (?, ?, ?, ?)
+  `;
+  
+  // Execute the SQL query
+  connection.query(query, [contract_id, payment_date, amount_paid, payment_status], (err, results) => {
+    if (err) {
+      console.error('Error adding payment:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+      return;
+    }
+
+    // If successful, send a success response
+    res.json({ message: 'Payment added successfully' });
+  });
+});
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

@@ -15,6 +15,7 @@ import Approved from './dashboardclient/Approved.js'
 import Notapproved from './dashboardclient/Notapproved.js';
 import Processing from './dashboardclient/Processing.js'
 import Contract from './dashboardclient/Contarct.js'
+import SuiviPaiement from './dashboardadmin/suivipaiment.js'; // Import SuiviPaiement component
 import { RecoilRoot } from 'recoil';
 import Client from './dashboardadmin/ClientStats.js'
 
@@ -41,13 +42,14 @@ function App() {
           <Route path="/Processing" element={<Processing />} />
           <Route path="/" element={<DashboardClient />} />
           <Route path="/Contract" element={<Contract />} />
-
+          <Route path="/late-payments" element={<SuiviPaiement />} />
           <Route path="/gestion-opportunites/:status" element={<GestionOpportunites />} />
           <Route path="/Clientstats" element={<Client />} />
+
+
         </Routes>
       </Router>
     </RecoilRoot>
-
   );
 }
 
