@@ -176,6 +176,16 @@ const DemandeFinForm = () => {
           <p>Votre demande est en cours de traitement.</p>
         </div>
       )}
+      {submissionState === 0 && (
+        <div className="not-approved-box">
+          <p>Votre demande n'a pas été approuvée.</p>
+        </div>
+      )}
+      {submissionState === 2 && (
+        <div className="approved-box">
+          <p>Votre demande a été approuvée.</p>
+        </div>
+      )}
     </div>
   );
 };

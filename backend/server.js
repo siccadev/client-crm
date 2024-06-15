@@ -156,7 +156,7 @@ app.get('/demandesfin', (req, res) => {
   });
 });
 app.post('/demandesfin', (req, res) => {
-  const demandeFin = { ...req.body, state: 1, approvalStatus: 'not approved' }; // Include approvalStatus field
+  const demandeFin = { ...req.body, state: 1, approvalStatus: 'not approved' };
   const query = 'INSERT INTO demandes_fin SET ?';
 
   connection.query(query, demandeFin, (err, results) => {
@@ -291,31 +291,8 @@ app.post('/reset-password', (req, res) => {
 
 
 
-app.post('/contart', (req, res) => {
-  const contrat = req.body;
-  const query = 'INSERT INTO contracts SET ?';
 
-  connection.query(query, contrat, (err, results) => {
-    if (err) {
-      console.error('Error submitting form data:', err);
-      return res.status(500).json({ message: 'Error submitting form data' });
-    }
 
-    res.status(201).json({ message: 'Contract submitted successfully', id: results.insertId });
-  });
-});
-
-app.get('/contart', (req, res) => {
-  const query = 'SELECT * FROM contracts';
-  connection.query(query, (err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ message: 'Error submitting form data' });
-    }
-
-    res.status(200).json({ message: 'Form data submitted successfully', data: results });
-  });
-});
 
 
 app.get('/contracts/:id', (req, res) => {
