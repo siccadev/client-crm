@@ -1,0 +1,43 @@
+.feedbacks-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+}
+
+.feedbacks-list {
+      display: grid;
+      grid-gap: 20px;
+}
+
+.feedback-item {
+      background-color: #f9f9f9;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.feedback-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+}
+
+.feedback-content {
+      margin-top: 10px;
+}
+
+/* Feedbacks.css */
+.card {
+      min-height: 200px; /* Adjust the height as needed */
+      padding: 20px; /* Add some padding */
+      margin: 0 auto; /* Center the card */
+    }
+    
+    .card-title {
+      font-size: 1.5rem;
+    }
+    
+    .card-text {
+      font-size: 1.2rem;
+    }
+    

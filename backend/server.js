@@ -482,7 +482,7 @@ app.post('/feedback', (req, res) => {
 
 
 app.get('/late-payments', (req, res) => {
-  
+
   const query = `
     SELECT c.*, p.payment_date, p.amount_paid
     FROM contracts c
@@ -490,7 +490,7 @@ app.get('/late-payments', (req, res) => {
     WHERE p.payment_status = 'late'
   `;
 
-  
+
   connection.query(query, (err, results) => {
     if (err) {
       console.error('Error fetching late payments:', err);
@@ -498,38 +498,78 @@ app.get('/late-payments', (req, res) => {
       return;
     }
 
-   
+
     res.json(results);
   });
 });
 
-
-// Define a route to handle POST requests for adding payments
 app.post('/add-payment', (req, res) => {
   const { contract_id, payment_date, amount_paid, payment_status } = req.body;
 
-  // Validate input
   if (!contract_id || !payment_date || !amount_paid || !payment_status) {
     return res.status(400).json({ error: 'All fields are required: contract_id, payment_date, amount_paid, payment_status' });
   }
-
-  // Create SQL query to insert payment data into the database
   const query = `
     INSERT INTO payments (contract_id, payment_date, amount_paid, payment_status)
     VALUES (?, ?, ?, ?)
   `;
-  
-  // Execute the SQL query
+
   connection.query(query, [contract_id, payment_date, amount_paid, payment_status], (err, results) => {
     if (err) {
       console.error('Error adding payment:', err);
       return res.status(500).json({ error: 'Internal Server Error' });
     }
-
-    // If successful, send a success response
     res.json({ message: 'Payment added successfully' });
   });
 });
+
+
+
+
+app.post('/feedback', (req, res) => {
+  const { username, feedback } = req.body;
+  if (!username || !feedback) {
+    return res.status(400).json({ message: 'Veuillez fournir un nom d\'utilisateur et un commentaire.' });
+  }
+  const query = 'INSERT INTO feedback (username, feedback) VALUES (?, ?)';
+  const values = [username, feedback];
+  connection.query(query, values, (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: 'Une erreur s\'est produite lors de la soumission du commentaire.' });
+    }
+    res.status(200).json({ message: 'Commentaire soumis avec succès.' });
+  });
+});
+
+app.get('/feedback', (req, res) => {
+  const query = 'SELECT * FROM feedback';
+  connection.query(query, (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: 'Error fetching approved demandes' });
+    }
+
+    res.status(200).json({ message: 'Approved demandes fetched successfully', data: results });
+  });
+});
+app.delete('/feedback/:id', (req, res) => {
+  const id = req.params.id;
+  const sql = 'DELETE FROM feedback WHERE id = ?';
+  connection.query(sql, id, (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: 'Error deleting data' });
+    }
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ message: 'Contract not found' });
+    }
+    res.status(200).json({ message: 'Data deleted successfully', data: results });
+  });
+});
+
+
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
