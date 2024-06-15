@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:4306:4306
--- Generation Time: Jun 12, 2024 at 12:32 PM
+-- Host: 127.0.0.1:4306
+-- Generation Time: Jun 15, 2024 at 12:53 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -39,16 +39,19 @@ CREATE TABLE `contracts` (
   `owner_first_name` varchar(50) NOT NULL,
   `owner_last_name` varchar(50) NOT NULL,
   `electronic_signature` text NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `username` varchar(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `contracts`
 --
 
-INSERT INTO `contracts` (`contract_id`, `contract_number`, `contract_type`, `start_date`, `end_date`, `financing_mode`, `monthly_amount`, `equipment_type`, `owner_first_name`, `owner_last_name`, `electronic_signature`, `created_at`) VALUES
-(1, 'CON001', 'Lease', '2024-01-01', '2024-12-31', 'Monthly', 500.00, 'Computer', 'John', 'Doe', 'John Doe', '2024-06-12 07:00:00'),
-(2, 'CON002', 'Rental', '2024-02-15', '2024-08-15', 'Monthly', 700.00, 'Vehicle', 'Jane', 'Smith', 'Jane Smith', '2024-06-12 08:00:00');
+INSERT INTO `contracts` (`contract_id`, `contract_number`, `contract_type`, `start_date`, `end_date`, `financing_mode`, `monthly_amount`, `equipment_type`, `owner_first_name`, `owner_last_name`, `electronic_signature`, `created_at`, `username`) VALUES
+(1, 'CON001', 'Lease', '2024-01-01', '2024-12-31', 'Monthly', 500.00, 'Computer', 'John', 'Doe', 'John Doe', '2024-06-12 07:00:00', ''),
+(2, 'CON002', 'Rental', '2024-02-15', '2024-08-15', 'Monthly', 700.00, 'Vehicle', 'Jane', 'Smith', 'Jane Smith', '2024-06-12 08:00:00', ''),
+(82, 'jbjib', '', '5555-05-05', '5555-02-22', '', 0.00, '', '', '', '', '2024-06-12 11:11:08', NULL),
+(82, 'jbjib', '', '5555-05-05', '5555-02-22', '', 0.00, '', '', '', '', '2024-06-12 11:11:09', NULL);
 
 -- --------------------------------------------------------
 
@@ -180,15 +183,6 @@ CREATE TABLE `payments` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `payments`
---
-
-INSERT INTO `payments` (`payment_id`, `contract_id`, `payment_date`, `amount_paid`, `payment_status`, `created_at`) VALUES
-(1, 1, '2024-06-01', 500.00, 'on-time', '2024-06-12 09:00:00'),
-(2, 1, '2024-07-05', 400.00, 'late', '2024-06-12 10:00:00'),
-(3, 2, '2024-06-10', 700.00, 'on-time', '2024-06-12 11:00:00');
-
 -- --------------------------------------------------------
 
 --
@@ -215,9 +209,7 @@ INSERT INTO `register` (`username`, `email`, `password`, `role`, `token`, `id`, 
 ('nourhannachi0319', 'nounouhannachi2001@gmail.com', 'nour1234*', 'client', '37f63f07c4544b1c4affbb5d4c21e505f2303c80', 10, '', ''),
 ('adminsmartsystem', 'admin@smartsystem.com', 'adminadmin', 'admin', NULL, 17, '', ''),
 ('amine_hannachi', 'nounouhannachi2001@gmail.com', 'nour1234*', 'user', NULL, 20, '', ''),
-('amine_hannachii', 'nounouhannachi2001@gmail.com', 'nour1234*', 'user', NULL, 21, '', ''),
-('nour_hannachi19', 'nourhannechi7@gmail.com', 'FAMILLEhannachi1234*', 'user', NULL, 22, '', ''),
-('nour_hannachi198', 'nourhannechi7@gmail.com', 'FAMILLEhannachi1234*', 'user', NULL, 23, '', '');
+('nour_hannachi19', 'nourhannechi7@gmail.com', 'FAMILLEhannachi1234*', 'user', NULL, 22, '', '');
 
 -- --------------------------------------------------------
 
@@ -266,13 +258,14 @@ ALTER TABLE `feedback`
 --
 ALTER TABLE `payments`
   ADD PRIMARY KEY (`payment_id`),
-  ADD KEY `contract_id` (`contract_id`);
+  ADD KEY `payments_contract_fk` (`contract_id`);
 
 --
 -- Indexes for table `register`
 --
 ALTER TABLE `register`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_username` (`username`);
 
 --
 -- Indexes for table `state_types`
@@ -297,6 +290,12 @@ ALTER TABLE `feedback`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT for table `payments`
+--
+ALTER TABLE `payments`
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `register`
 --
 ALTER TABLE `register`
@@ -310,7 +309,7 @@ ALTER TABLE `register`
 -- Constraints for table `payments`
 --
 ALTER TABLE `payments`
-  ADD CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`contract_id`) REFERENCES `contracts` (`contract_id`);
+  ADD CONSTRAINT `payments_contract_fk` FOREIGN KEY (`contract_id`) REFERENCES `contracts` (`contract_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -2,14 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { CSVLink } from 'react-csv';
 import axios from 'axios';
 import './GestionOpportunites.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';import GestionRisques from './GestionRisques';
+
 function GestionOpportunites() {
   const [data, setData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showModal1, setShowModal1] = useState(false);
   const [deletedRowId, setDeletedRowId] = useState(null);
-  const navigate = useNavigate();
+  const navigate = useNavigate();  const [viewRisks, setViewRisks] = useState(false);
+  const [riskData, setRiskData] = useState({});
+
   useEffect(() => {
     axios.get('http://localhost:3001/demandesfin')
       .then(response => {
@@ -41,12 +44,8 @@ function GestionOpportunites() {
       .then(response => {
         const updatedRow = response.data.data[0];
         const newState = status === 'Approved' ? 2 : 0;
-        const updatedDemand = data.find(item => item.IDDemandes_Fin === id);
-        if (updatedDemand) {
-          updatedDemand.state = newState;
-          updatedDemand.approvalStatus = status;
-          setData([...data]);
-        }
+        const updatedDemand = { ...updatedRow, state: newState };
+        setData(data.map(item => (item.IDDemandes_Fin === id ? updatedDemand : item)));
       })
       .catch(err => {
         console.log(err);
@@ -59,11 +58,13 @@ function GestionOpportunites() {
     setShowModal(true);
   };
 
+  const evaluateRow = (row) => {
+    setRiskData(row);
+    setViewRisks(true);
+  };
+
   const sanitizeValue = (value) => {
-    if (value && typeof value === 'object') {
-      return JSON.stringify(value);
-    }
-    return value;
+    return value && typeof value === 'object' ? JSON.stringify(value) : value;
   };
 
   const csvData = data.map(item => ({
@@ -86,8 +87,13 @@ function GestionOpportunites() {
     DF_Durée: item.DF_Durée,
     DF_Taux: item.DF_Taux,
     DF_TEG: item.DF_TEG,
-    Statuts: item.statuts
+    Statuts: item.statuts,
+    State: item.state
   }));
+
+  if (viewRisks) {
+    return <GestionRisques riskData={riskData} setViewRisks={setViewRisks} />;
+  }
 
   return (
     <div>
@@ -115,7 +121,7 @@ function GestionOpportunites() {
             <th>DF_Taux</th>
             <th>DF_TEG</th>
             <th>Statuts</th>
-            <th>state</th>
+            <th>State</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -141,80 +147,41 @@ function GestionOpportunites() {
               <td>{sanitizeValue(item.DF_Durée)}</td>
               <td>{sanitizeValue(item.DF_Taux)}</td>
               <td>{sanitizeValue(item.DF_TEG)}</td>
-              <td>{sanitizeValue(item.approvalStatus)}</td>
+              <td>{sanitizeValue(item.statuts)}</td>
               <td>{sanitizeValue(item.state)}</td>
               <td>
+                <button onClick={() => viewRow(item.IDDemandes_Fin)}>Lire</button>
+                <button onClick={() => deleteRow(item.IDDemandes_Fin)}>Supprimer</button>
                 <button onClick={() => updateStatus(item.IDDemandes_Fin, 'Approved')}>Approve</button>
                 <button onClick={() => updateStatus(item.IDDemandes_Fin, 'Declined')}>Decline</button>
-                <button onClick={() => viewRow(item.IDDemandes_Fin)}>View</button>
-                <button onClick={() => deleteRow(item.IDDemandes_Fin)}>Delete</button>
+                <button onClick={() => evaluateRow(item)}>Évaluer</button>
                 <button onClick={() => navigate("/Clientstats")}>stats</button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-
-      <CSVLink className='button-24' data={csvData} filename={"demandesfin.csv"}>
-        Export to CSV
-      </CSVLink>
-
-      {showModal && selectedRow && (
+      {showModal && (
         <div className="modal">
           <div className="modal-content">
-            <span className="close" onClick={() => setShowModal(false)}>&times;</span>
-            <h2>Demand Details</h2>
-            <p><strong>ID:</strong> {selectedRow.IDDemandes_Fin}</p>
-            <p><strong>User ID:</strong> {selectedRow.UserID}</p>
-            <p><strong>Date:</strong> {selectedRow.DF_Date}</p>
-            <p><strong>Client Type:</strong> {selectedRow.Cl_Type}</p>
-            <p><strong>Client Name:</strong> {selectedRow.Cl_Nom}</p>
-            <p><strong>Client First Name:</strong> {selectedRow.Cl_Prenom}</p>
-            <p><strong>Client Sigle:</strong> {selectedRow.Cl_Sigle}</p>
-            <p><strong>KFJUR:</strong> {selectedRow.KFJUR}</p>
-            <p><strong>Client Company Name:</strong> {selectedRow.Cl_RaiSoc}</p>
-            <p><strong>Client Tax Number:</strong> {selectedRow.Cl_RC_UI}</p>
-            <p><strong>Client Fiscal Number:</strong> {selectedRow.Cl_Mat_Fisc}</p>
-            <p><strong>Client Creation Date:</strong> {selectedRow.Cl_Date_Creat}</p>
-            <p><strong>Client Capital:</strong> {selectedRow.Cl_Capital}</p>
-            <p><strong>Client Address:</strong> {selectedRow.Cl_Adresse}</p>
-            <p><strong>Client ID:</strong> {selectedRow.Cl_NumIdPM}</p>
-            <p><strong>Project:</strong> {selectedRow.DF_Projet}</p>
-            <p><strong>Amount (HT):</strong> {selectedRow.DF_Montant_HT}</p>
-            <p><strong>TVA:</strong> {selectedRow.DF_TVA}</p>
-            <p><strong>Amount (TTC):</strong> {selectedRow.DF_Montant_TTC}</p>
-            <p><strong>Self-Financed Amount (TTC):</strong> {selectedRow.DF_Auto_FinTTC}</p>
-            <p><strong>Duration:</strong> {selectedRow.DF_Durée}</p>
-            <p><strong>Rate:</strong> {selectedRow.DF_Taux}</p>
-            <p><strong>TEG:</strong> {selectedRow.DF_TEG}</p>
-            <p><strong>Period:</strong> {sanitizeValue(selectedRow.DF_Periode)}</p>
-            <p><strong>Branch ID:</strong> {selectedRow.IDSuccursales}</p>
-            <p><strong>Origin:</strong> {selectedRow.DF_Provenance}</p>
-            <p><strong>File Manager:</strong> {selectedRow.DF_Charge_Dossier}</p>
-            <p><strong>RIB:</strong> {selectedRow.DF_RIB}</p>
-            <p><strong>Caution CIN:</strong> {selectedRow.DF_Caution_CIN}</p>
-            <p><strong>Hypothecated NP:</strong> {selectedRow.DF_Hyp_NP}</p>
-            <p><strong>Hypothecated CIN:</strong> {selectedRow.DF_Hyp_CIN}</p>
-            <p><strong>Hypothecated Object:</strong> {selectedRow.DF_Hyp_Objet}</p>
-            <p><strong>Hypothecated Value:</strong> {selectedRow.DF_Hyp_Val}</p>
-            <p><strong>Status:</strong> {selectedRow.status}</p>
-            <p><strong>State:</strong> {selectedRow.state}</p>
-            <p><strong>Approval Status:</strong> {selectedRow.approvalStatus}</p>
+            <h2>Selected Row Details</h2>
+            {Object.keys(selectedRow).map((key) => (
+              <p key={key}>{key}: {typeof selectedRow[key] === 'object' ? JSON.stringify(selectedRow[key]) : selectedRow[key]}</p>
+            ))}
             <button onClick={() => setShowModal(false)}>Close</button>
           </div>
         </div>
       )}
-
       {showModal1 && (
         <div className="modal">
           <div className="modal-content">
-            <span className="close" onClick={() => setShowModal1(false)}>&times;</span>
-            <h2>Row Deleted</h2>
+            <h2>Row Deleted!</h2>
             <p>Row with ID {deletedRowId} has been deleted.</p>
-            <button className='button-24' onClick={() => setShowModal1(false)}>Close</button>
+            <button onClick={() => setShowModal1(false)}>Close</button>
           </div>
         </div>
       )}
+      <CSVLink className='button-24' data={csvData} filename="demandes_fin.csv">Download CSV</CSVLink>
     </div>
   );
 }

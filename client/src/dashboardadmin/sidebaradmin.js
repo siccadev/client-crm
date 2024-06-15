@@ -22,21 +22,19 @@ const Sidebar = () => {
         </button>
       </div>
       <ul>
-        {/* Existing sidebar items */}
         <li className="nav-item">
           <NavLink to="/dashboardadmin" activeClassName="active" onClick={() => onSelectModule('Dashboard')} className="nav-link">
             <i className="bi bi-speedometer2"></i>
             <span>Dashboard</span>
           </NavLink>
         </li>
-        {/* Add the new sidebar item for Suivi des paiement en retard des clients */}
         <li className="nav-item">
           <NavLink to="/late-payments" activeClassName="active" onClick={() => onSelectModule('Suivi des paiements en retard des clients')} className="nav-link">
             <i className="bi bi-clock-history"></i>
             <span>Suivi des paiements en retard des clients</span>
           </NavLink>
         </li>
-        {/* Remaining sidebar items */}
+
         <li className="nav-item">
           <NavLink to="/gestion-opportunites" activeClassName="active" onClick={() => onSelectModule('Gestion des opportunités de financement')} className="nav-link">
             <i className="bi bi-card-checklist"></i>
@@ -79,7 +77,7 @@ const Sidebar = () => {
             <span>Déconnexion</span>
           </NavLink>
         </li>
-      </ul>
+        </ul>
     </div>
   );
 };

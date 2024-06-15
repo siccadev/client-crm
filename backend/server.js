@@ -164,7 +164,7 @@ app.get('/demandesfin', (req, res) => {
   });
 });
 app.post('/demandesfin', (req, res) => {
-  const demandeFin = { ...req.body, state: 1, approvalStatus: 'not approved' }; // Include approvalStatus field
+  const demandeFin = { ...req.body, state: 1, approvalStatus: 'not approved' };
   const query = 'INSERT INTO demandes_fin SET ?';
 
   connection.query(query, demandeFin, (err, results) => {
@@ -299,31 +299,8 @@ app.post('/reset-password', (req, res) => {
 
 
 
-app.post('/contart', (req, res) => {
-  const contrat = req.body;
-  const query = 'INSERT INTO contracts SET ?';
 
-  connection.query(query, contrat, (err, results) => {
-    if (err) {
-      console.error('Error submitting form data:', err);
-      return res.status(500).json({ message: 'Error submitting form data' });
-    }
 
-    res.status(201).json({ message: 'Contract submitted successfully', id: results.insertId });
-  });
-});
-
-app.get('/contart', (req, res) => {
-  const query = 'SELECT * FROM contracts';
-  connection.query(query, (err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ message: 'Error submitting form data' });
-    }
-
-    res.status(200).json({ message: 'Form data submitted successfully', data: results });
-  });
-});
 
 
 app.get('/contracts/:id', (req, res) => {
@@ -531,6 +508,11 @@ app.get('/late-payments', (req, res) => {
 app.post('/add-payment', (req, res) => {
   const { contract_id, payment_date, amount_paid, payment_status } = req.body;
 
+  // Validate input
+  if (!contract_id || !payment_date || !amount_paid || !payment_status) {
+    return res.status(400).json({ error: 'All fields are required: contract_id, payment_date, amount_paid, payment_status' });
+  }
+
   // Create SQL query to insert payment data into the database
   const query = `
     INSERT INTO payments (contract_id, payment_date, amount_paid, payment_status)
@@ -541,14 +523,14 @@ app.post('/add-payment', (req, res) => {
   connection.query(query, [contract_id, payment_date, amount_paid, payment_status], (err, results) => {
     if (err) {
       console.error('Error adding payment:', err);
-      res.status(500).json({ error: 'Internal Server Error' });
-      return;
+      return res.status(500).json({ error: 'Internal Server Error' });
     }
 
     // If successful, send a success response
     res.json({ message: 'Payment added successfully' });
   });
 });
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
