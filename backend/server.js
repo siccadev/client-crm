@@ -523,6 +523,11 @@ app.get('/late-payments', (req, res) => {
 app.post('/add-payment', (req, res) => {
   const { contract_id, payment_date, amount_paid, payment_status } = req.body;
 
+  // Validate input
+  if (!contract_id || !payment_date || !amount_paid || !payment_status) {
+    return res.status(400).json({ error: 'All fields are required: contract_id, payment_date, amount_paid, payment_status' });
+  }
+
   // Create SQL query to insert payment data into the database
   const query = `
     INSERT INTO payments (contract_id, payment_date, amount_paid, payment_status)
@@ -533,14 +538,14 @@ app.post('/add-payment', (req, res) => {
   connection.query(query, [contract_id, payment_date, amount_paid, payment_status], (err, results) => {
     if (err) {
       console.error('Error adding payment:', err);
-      res.status(500).json({ error: 'Internal Server Error' });
-      return;
+      return res.status(500).json({ error: 'Internal Server Error' });
     }
 
     // If successful, send a success response
     res.json({ message: 'Payment added successfully' });
   });
 });
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
