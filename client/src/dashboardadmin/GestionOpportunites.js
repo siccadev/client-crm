@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { CSVLink } from 'react-csv';
 import axios from 'axios';
 import './GestionOpportunites.css';
-import GestionRisques from './GestionRisques';
+import { useNavigate } from 'react-router-dom';import GestionRisques from './GestionRisques';
 
 function GestionOpportunites() {
   const [data, setData] = useState([]);
@@ -10,7 +10,7 @@ function GestionOpportunites() {
   const [showModal, setShowModal] = useState(false);
   const [showModal1, setShowModal1] = useState(false);
   const [deletedRowId, setDeletedRowId] = useState(null);
-  const [viewRisks, setViewRisks] = useState(false);
+  const navigate = useNavigate();  const [viewRisks, setViewRisks] = useState(false);
   const [riskData, setRiskData] = useState({});
 
   useEffect(() => {
@@ -42,8 +42,8 @@ function GestionOpportunites() {
   const updateStatus = (id, status) => {
     axios.put(`http://localhost:3001/demandesfin/${id}`, { status: status })
       .then(response => {
-        const updatedRow = response.data.data[0];  // Assuming the API returns the updated row in this structure
-        const newState = status === 'Approved' ? 2 : 0; // 2 for approved, 0 for not approved
+        const updatedRow = response.data.data[0];
+        const newState = status === 'Approved' ? 2 : 0;
         const updatedDemand = { ...updatedRow, state: newState };
         setData(data.map(item => (item.IDDemandes_Fin === id ? updatedDemand : item)));
       })
@@ -155,6 +155,7 @@ function GestionOpportunites() {
                 <button onClick={() => updateStatus(item.IDDemandes_Fin, 'Approved')}>Approve</button>
                 <button onClick={() => updateStatus(item.IDDemandes_Fin, 'Declined')}>Decline</button>
                 <button onClick={() => evaluateRow(item)}>Évaluer</button>
+                <button onClick={() => navigate("/Clientstats")}>stats</button>
               </td>
             </tr>
           ))}

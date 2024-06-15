@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import {
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Modal, TextField, Checkbox, FormControlLabel, Typography, Box
+} from '@mui/material';
+import './nicecss.css'
 
 const SuiviPaiement = () => {
   const [latePayments, setLatePayments] = useState([]);
@@ -9,6 +13,7 @@ const SuiviPaiement = () => {
     payment_status: 'on-time', // default value, can be changed based on the checkbox
   });
   const [error, setError] = useState(null);
+  const [isPopupOpen, setIsPopupOpen] = useState(false); // State to manage popup visibility
 
   useEffect(() => {
     fetchLatePayments();
@@ -47,6 +52,7 @@ const SuiviPaiement = () => {
       await saveManualInput();
       await fetchLatePayments(); // Fetch updated late payments after submission
       resetForm();
+      setIsPopupOpen(false); // Close the popup after successful submission
     } catch (error) {
       console.error('Error saving manual input:', error);
       setError(error.message);
@@ -62,22 +68,18 @@ const SuiviPaiement = () => {
         },
         body: JSON.stringify(manualInput),
       });
-  
+
       if (!response.ok) {
         const errorMessage = await response.text();
         throw new Error(`Error saving manual input: ${response.status} - ${errorMessage}`);
       }
-  
-      // Optionally, handle response data if needed
-      // const data = await response.json();
-      // console.log('Response data:', data);
-      
+
     } catch (error) {
       console.error('Error saving manual input:', error);
       throw new Error('Error saving manual input');
     }
   };
-  
+
   const resetForm = () => {
     setManualInput({
       contract_id: '',
@@ -92,53 +94,83 @@ const SuiviPaiement = () => {
     return contract_id.trim() !== '' && payment_date.trim() !== '' && amount_paid.trim() !== '';
   };
 
+  const togglePopup = () => {
+    setIsPopupOpen(!isPopupOpen);
+  };
+
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    p: 4,
+    borderRadius: 2,
+  };
+
   return (
     <div>
-      <h1>Suivi des paiements en retard des clients</h1>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <table>
-        <thead>
-          <tr>
-            <th>Contrat</th>
-            <th>Date de Paiement</th>
-            <th>Montant Payé</th>
-            <th>Nom</th>
-            <th>En Retard</th>
-          </tr>
-        </thead>
-        <tbody>
-          {latePayments.map((payment) => (
-            <tr key={payment.payment_id}>
-              <td>{payment.contract_id}</td>
-              <td>{payment.payment_date}</td>
-              <td>{payment.amount_paid}</td>
-              <td>{payment.owner_first_name}</td>
-              <td>{payment.payment_status === 'late' ? 'Oui' : 'Non'}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <Typography variant="h4" component="h1" gutterBottom>
+        Suivi des paiements en retard des clients
+      </Typography>
+      {error && <Typography color="error">{error}</Typography>}
+      <TableContainer component={Paper} style={{ width: '80%', margin: 'auto', marginTop: '20px' }}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Contrat</TableCell>
+              <TableCell>Date de Paiement</TableCell>
+              <TableCell>Montant Payé</TableCell>
+              <TableCell>Nom</TableCell>
+              <TableCell>En Retard</TableCell>
+              <TableCell>
+                <button onClick={togglePopup}>Ajouter Paiement</button>
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {latePayments.map((payment) => (
+              <TableRow key={payment.payment_id}>
+                <TableCell>{payment.contract_id}</TableCell>
+                <TableCell>{payment.payment_date}</TableCell>
+                <TableCell>{payment.amount_paid}</TableCell>
+                <TableCell>{payment.owner_first_name}</TableCell>
+                <TableCell>{payment.payment_status === 'late' ? 'Oui' : 'Non'}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
-      <form onSubmit={handleSubmit}>
-        <h2>Saisie Manuelle</h2>
-        <label>
-          Contrat:
-          <input type="text" name="contract_id" value={manualInput.contract_id} onChange={handleInputChange} />
-        </label>
-        <label>
-          Date de Paiement:
-          <input type="date" name="payment_date" value={manualInput.payment_date} onChange={handleInputChange} />
-        </label>
-        <label>
-          Montant Payé:
-          <input type="text" name="amount_paid" value={manualInput.amount_paid} onChange={handleInputChange} />
-        </label>
-        <label>
-          En Retard:
-          <input type="checkbox" name="payment_status" checked={manualInput.payment_status === 'late'} onChange={handleCheckboxChange} />
-        </label>
-        <button type="submit">Enregistrer</button>
-      </form>
+      {isPopupOpen && (
+        <div className="popup">
+          <div className="popup-content">
+            <form onSubmit={handleSubmit}>
+              <h2>Saisie Manuelle</h2>
+              <label>
+                Contrat:
+                <input type="text" name="contract_id" value={manualInput.contract_id} onChange={handleInputChange} />
+              </label>
+              <label>
+                Date de Paiement:
+                <input type="date" name="payment_date" value={manualInput.payment_date} onChange={handleInputChange} />
+              </label>
+              <label>
+                Montant Payé:
+                <input type="text" name="amount_paid" value={manualInput.amount_paid} onChange={handleInputChange} />
+              </label>
+              <label>
+                En Retard:
+                <input type="checkbox" name="payment_status" checked={manualInput.payment_status === 'late'} onChange={handleCheckboxChange} />
+              </label>
+              <button type="submit">Enregistrer</button>
+              <button type="button" onClick={togglePopup}>Fermer</button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

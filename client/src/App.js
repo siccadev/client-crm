@@ -21,6 +21,8 @@ import Statistiques from './dashboardadmin/Statistiques.js'; // Import Statistiq
 import { RecoilRoot } from 'recoil';
 
 import risk from "./dashboardadmin/GestionRisques.js";
+import Client from './dashboardadmin/ClientStats.js'
+
 
 function App() {
   return (
@@ -44,10 +46,12 @@ function App() {
           <Route path="/Processing" element={<Processing />} />
           <Route path="/" element={<DashboardClient />} />
           <Route path="/Contract" element={<Contract />} />
-          <Route path="/late-payments" element={<SuiviPaiement />} /> {/* Add this line for SuiviPaiement component */}
-          <Route path="/payment-statistics" element={<Statistiques />} /> {/* Add this line for PaymentStatistics component */}
+          <Route path="/late-payments" element={<SuiviPaiement />} />          <Route path="/payment-statistics" element={<Statistiques />} /> {/* Add this line for PaymentStatistics component */}
           <Route path="/statistiques" element={<Statistiques />} /> {/* Add this line for Statistiques component */}
           <Route path="/gestion-opportunites/:status" element={<GestionOpportunites />} />
+          <Route path="/Clientstats" element={<Client />} />
+
+
         </Routes>
       </Router>
     </RecoilRoot>
