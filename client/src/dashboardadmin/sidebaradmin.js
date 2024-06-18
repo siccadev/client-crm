@@ -72,6 +72,12 @@ const Sidebar = () => {
           </NavLink>
         </li>
         <li className="nav-item">
+        <NavLink to="/notification" activeClassName="active" onClick={() => onSelectModule('notification')} className="nav-link">
+          <i className="bi bi-box-arrow-right"></i>
+          <span>notification</span>
+        </NavLink>
+      </li>
+        <li className="nav-item">
           <NavLink to="/logout" activeClassName="active" onClick={() => onSelectModule('Déconnexion')} className="nav-link">
             <i className="bi bi-box-arrow-right"></i>
             <span>Déconnexion</span>

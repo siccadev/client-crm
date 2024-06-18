@@ -21,7 +21,7 @@ import { RecoilRoot } from 'recoil';
 import risk from "./dashboardadmin/GestionRisques.js";
 import Client from './dashboardadmin/ClientStats.js'
 import Feedbacks from './dashboardadmin/Feedbacks.js'
-
+import Notificationcomponent from './dashboardadmin/NotificationComponent.js';
 
 function App() {
   return (
@@ -51,7 +51,7 @@ function App() {
           <Route path="/gestion-opportunites/:status" element={<GestionOpportunites />} />
           <Route path="/Clientstats" element={<Client />} />
           <Route path="/Feedbacks" element={<Feedbacks />} />
-
+          <Route path="/notification" element={<Notificationcomponent />} />
 
         </Routes>
       </Router>

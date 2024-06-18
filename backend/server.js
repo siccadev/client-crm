@@ -1,16 +1,13 @@
 const express = require('express');
-const app = express();
 const cors = require('cors');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 require('dotenv').config();
-const PORT = process.env.PORT || 3001;
 
-const generateToken = () => {
-  return crypto.randomBytes(20).toString('hex');
-};
+const app = express();
+const PORT = process.env.PORT || 3001;
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -20,11 +17,14 @@ const connection = mysql.createConnection({
   user: 'root',
   password: '',
   database: 'pfecrm',
-  port: 4306
+  port: 4306,
 });
 
 connection.connect((err) => {
-  if (err) throw err;
+  if (err) {
+    console.error('Database connection failed:', err.stack);
+    return;
+  }
   console.log('Connected to the database');
 });
 
@@ -38,44 +38,50 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Function to send an email for password reset
-const sendEmail = (user, token) => {
-  const resetLink = `http://localhost:3001/reset-password?token=${token}`;
+const sendEmail = async (email, message) => {
   const mailOptions = {
     from: 'nounouhannachi2001@gmail.com',
-    to: user.email,
-    subject: 'Password Reset Request',
-    text: `Please click on the following link to reset your password: ${resetLink}`
+    to: email,
+    subject: 'Notification',
+    text: message,
   };
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error(error);
-    } else {
-      console.log(`Email sent: ${info.response}`);
-    }
-  });
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log('Email sent successfully');
+  } catch (error) {
+    console.error('Error sending email:', error); // Log full error
+    throw new Error('Failed to send email notification');
+  }
 };
+
+app.post('/send-email-notification', async (req, res) => {
+  const { email, message } = req.body;
+
+  try {
+    await sendEmail(email, message);
+    res.status(200).send({ message: 'Email notification sent successfully!' });
+  } catch (error) {
+    console.error('Error in /send-email-notification route:', error.message);
+    res.status(500).send({ message: 'Failed to send email notification', error: error.message });
+  }
+});
 
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
 
-  // First, check if the user exists in the register table
   const query = 'SELECT * FROM register WHERE `username` = ? AND `password` = ?';
   connection.query(query, [username, password], (err, results) => {
     if (err) {
       console.error(err);
-      res.status(500).json({ message: 'Nom d\'utilisateur ou mot de passe incorrect.' });
-      return;
+      return res.status(500).json({ message: 'Nom d\'utilisateur ou mot de passe incorrect.' });
     }
 
     if (results.length === 0) {
-      res.status(401).json({ message: 'Nom d\'utilisateur ou mot de passe incorrect.' });
-      return;
+      return res.status(401).json({ message: 'Nom d\'utilisateur ou mot de passe incorrect.' });
     }
 
     const userRole = results[0].role;
-
 
     if (userRole === 'admin') {
       if (username === 'adminsmartsystem' && password === 'adminadmin') {
@@ -91,14 +97,13 @@ app.post('/login', (req, res) => {
   });
 });
 
-
 app.get('/user/:username', (req, res) => {
   const username = req.params.username;
   const query = 'SELECT * FROM register WHERE username = ?';
 
   connection.query(query, [username], (err, results) => {
     if (err) {
-      res.status(500).send(err);
+      return res.status(500).send(err);
     }
 
     if (results.length > 0) {
@@ -113,24 +118,20 @@ const paymentStats = [
   { month: 'January', latePayments: 5 },
   { month: 'February', latePayments: 3 },
   { month: 'March', latePayments: 8 },
-  // Ajouter plus de données selon les besoins
 ];
+
 app.get('/api/payment-stats', (req, res) => {
   res.json(paymentStats);
 });
 
 app.post('/register', (req, res) => {
   const { username, email, password, role, activite, secteur } = req.body;
-
-  // Set the default role to 'user' if not provided
   const userRole = role || 'user';
 
-  // If the user is a client and the activite or secteur is not provided, return an error
   if (userRole === 'client' && (!activite || !secteur)) {
     return res.status(400).json({ message: 'Veuillez fournir une activité et un secteur.' });
   }
 
-  // Insert user data into MySQL database
   let query;
   let values;
   if (userRole === 'client') {
@@ -144,25 +145,25 @@ app.post('/register', (req, res) => {
   connection.query(query, values, (err, results) => {
     if (err) {
       console.error(err);
-      res.status(500).json({ message: 'Une erreur s\'est produite lors de linscription.' });
-      return;
+      return res.status(500).json({ message: 'Une erreur s\'est produite lors de l\'inscription.' });
     }
 
-    // Redirect user to login page
     res.status(200).json({ message: 'Inscription réussie.', redirect: '/login' });
   });
 });
+
 app.get('/demandesfin', (req, res) => {
   const query = 'SELECT * FROM demandes_fin';
   connection.query(query, (err, results) => {
     if (err) {
       console.error(err);
-      return res.status(500).json({ message: 'Error submitting form data' });
+      return res.status(500).json({ message: 'Error fetching data' });
     }
 
-    res.status(200).json({ message: 'Form data submitted successfully', data: results });
+    res.status(200).json({ message: 'Data fetched successfully', data: results });
   });
 });
+
 app.post('/demandesfin', (req, res) => {
   const demandeFin = { ...req.body, state: 1, approvalStatus: 'not approved' };
   const query = 'INSERT INTO demandes_fin SET ?';
@@ -203,7 +204,6 @@ app.put('/demandesfin/:id', (req, res) => {
   });
 });
 
-
 app.delete('/demandesfin/:IDDemandes_Fin', (req, res) => {
   const id = req.params.IDDemandes_Fin;
   const sql = 'DELETE FROM demandes_fin WHERE IDDemandes_Fin = ?';
@@ -215,6 +215,30 @@ app.delete('/demandesfin/:IDDemandes_Fin', (req, res) => {
     res.status(200).json({ message: 'Data deleted successfully', data: results });
   });
 });
+
+const generateToken = () => {
+  return crypto.randomBytes(20).toString('hex');
+};
+
+const sendPasswordResetEmail = (user, token) => {
+  const mailOptions = {
+    from: 'nounouhannachi2001@gmail.com',
+    to: user.email,
+    subject: 'Password Reset',
+    text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
+           Please click on the following link, or paste this into your browser to complete the process:\n\n
+           http://localhost:3000/reset-password/${token}\n\n
+           If you did not request this, please ignore this email and your password will remain unchanged.\n`,
+  };
+
+  transporter.sendMail(mailOptions, (err) => {
+    if (err) {
+      console.error('Error sending password reset email:', err);
+    } else {
+      console.log('Password reset email sent successfully');
+    }
+  });
+};
 
 // Route handler for initiating password reset
 app.post('/forgot-password', (req, res) => {
