@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import "./notification.css";
 
 const EmailNotificationForm = () => {
   const [email, setEmail] = useState('');
@@ -33,7 +34,7 @@ const EmailNotificationForm = () => {
   };
 
   return (
-    <div>
+    <div className='input'>
       <input
         type="email"
         value={email}
@@ -45,7 +46,7 @@ const EmailNotificationForm = () => {
         onChange={(e) => setMessage(e.target.value)}
         placeholder="Message"
       ></textarea>
-      <button onClick={sendEmailNotification} disabled={isLoading}>
+      <button className="send-button" onClick={sendEmailNotification} disabled={isLoading}>
         {isLoading ? 'Sending...' : 'Send Email Notification'}
       </button>
       {statusMessage && <p>{statusMessage}</p>}

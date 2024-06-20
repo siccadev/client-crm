@@ -1,18 +1,62 @@
-.notifications {
-    margin: 20px auto;
-    padding: 10px;
-    width: 80%;
-    background-color: #f9f9f9;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .notification {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .notification:last-child {
-    border-bottom: none;
-  }
-  
+
+.input {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(255, 0, 0, 0.655);
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+input[type="email"],
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+input[type="email"]:focus,
+textarea:focus {
+  border-color: #FF4742;
+}
+textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+button {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #FF4742;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+button:hover:not(:disabled) {
+  background-color: #0084ff;
+  color: white;
+}
+p {
+  margin: 0;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  text-align: center;
+}
+p.success {
+  background-color: #d4edda;
+  color: #155724;
+}
+p.error {
+  background-color: #f8d7da;
+  color: #ff0019;
+} 

@@ -47,18 +47,7 @@ const Sidebar = () => {
             <span>Gestion de mécanisme de finanacement</span>
           </NavLink>
         </li>
-        <li className="nav-item">
-          <NavLink to="/gestion-risques" activeClassName="active" onClick={() => onSelectModule('Gestion des risques')} className="nav-link">
-            <i className="bi bi-exclamation-octagon"></i>
-            <span>Gestion des risques</span>
-          </NavLink>
-        </li>
-        <li className="nav-item">
-          <NavLink to="/recouvrement" activeClassName="active" onClick={() => onSelectModule('Recouvrement')} className="nav-link">
-            <i className="bi bi-cash-coin"></i>
-            <span>Recouvrement</span>
-          </NavLink>
-        </li>
+       
         <li className="nav-item">
           <NavLink to="/statistiques" activeClassName="active" onClick={() => onSelectModule('Statistiques')} className="nav-link">
             <i className="bi bi-bar-chart-fill"></i>
